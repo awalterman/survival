@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 65edc47f936264b6cbbaa26491feaad5
+guid: a753ecf3f2a4340ba9c9b40ca070c6fb
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Cooked_Meat_Icon_Small
+    21300000: Leather_Icon_Small
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -26,9 +26,9 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: 1
+    aniso: -1
     mipBias: -1
-    wrapMode: 1
+    wrapMode: -1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
