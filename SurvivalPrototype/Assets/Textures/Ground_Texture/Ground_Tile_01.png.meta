@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: be12b58574b9144d1984fbfa9f64f25a
+guid: bda5452dc8f0d4b418e4afd69fb74075
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Leaf_Icon_Small
+    21300000: Ground_Tile_01
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -26,9 +26,9 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: 1
+    aniso: -1
     mipBias: -1
-    wrapMode: 1
+    wrapMode: -1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50

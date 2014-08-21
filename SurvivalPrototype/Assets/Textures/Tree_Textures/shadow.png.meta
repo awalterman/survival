@@ -1,10 +1,12 @@
 fileFormatVersion: 2
 guid: e8864b970338742e4a299f3228467606
 TextureImporter:
+  fileIDToRecycleName:
+    21300000: shadow
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -24,9 +26,9 @@ TextureImporter:
   maxTextureSize: 8
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50

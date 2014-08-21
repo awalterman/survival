@@ -17,12 +17,6 @@ public var westDoor : GameObject;
 private var openDoors : Dir = 0;
 
 function Start() {
-	// var v : int = 0;
-	// for (var i : int = 0; i < 4; i++) {
-	// 	v <<= 1;
-	// 	v |= (Random.value > 0.5 ? 1 : 0);
-	// }
-	// SetDoors(v);
 }
 
 function OpenDoors(doors : Dir) {
