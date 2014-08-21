@@ -1,6 +1,7 @@
 ﻿#pragma strict
 
 private var playerSource: GameStart;
+public var collectDistance : float;
 var life : int;
 
 function Start () {
@@ -15,9 +16,19 @@ function Update () {
 }
 
 function OnMouseDown() {
-	gatherStone();
-	life --;
+	var players : GameObject[];
+	var player : GameObject;
+	var playerPosition : Vector3;
+	var distance : float;
+	players = GameObject.FindGameObjectsWithTag("Player");
+	player = players[0];
+	playerPosition = player.transform.position;
+	distance = Vector3.Distance(playerPosition, transform.position);
+	if (distance < collectDistance) {
+		gatherStone();
+		life --;
 	}
+}
 	
 function gatherStone(){
 	if(playerSource.itemCheck("PickAxe")){
