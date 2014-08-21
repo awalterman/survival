@@ -1,3 +1,5 @@
-./*
-!Assets
-!ProjectSettings
+Library
+Temp
+*.csproj
+*.sln
+*.unityproj
