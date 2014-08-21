@@ -78,6 +78,8 @@ public var meatIcon: Texture2D;
 public var hidesIcon: Texture2D;
 public var berriesIcon: Texture2D;
 public var fireIcon: Texture2D;
+public var healthIcon: Texture2D;
+public var energyIcon: Texture2D;
 
 function Start () {
 } 
@@ -88,12 +90,12 @@ function OnGUI() {
 	
 	if(gameLost == false && gameWin == false){		
 		//health bar
-		GUI.Label(Rect(x-70,10,100,30),"Health");
+		GUI.Label(Rect(x-70,10,100,30),GUIContent("Health",healthIcon));
 		GUI.Box(Rect(x-25,10,100,20),"bar");
 		GUI.Box(Rect(x-25,10,health,20),"fill");
 		
 		//energy
-		GUI.Label(Rect(x-70,35,100,30),"Energy");
+		GUI.Label(Rect(x-70,35,100,30),GUIContent("Energy",energyIcon));
 		GUI.Box(Rect(x-25,35,100,20),"bar");
 		GUI.Box(Rect(x-25,35,health,20),"fill");
 				
@@ -164,11 +166,11 @@ function OnGUI() {
 			if (GUI.Button(Rect(0,135,80,20),"Campfire"))
 				craftCampfire();
 			GUI.Label (Rect (85, 136, 100, 20),GUIContent("20",woodIcon));
-			GUI.Label (Rect (85, 136, 100, 20),GUIContent("1",rockIcon));
+			GUI.Label (Rect (120, 136, 100, 20),GUIContent("1",rockIcon));
 			if (GUI.Button(Rect(0,160,80,20),"Cook Meat"))
 				cookMeat();
 			GUI.Label (Rect (85, 161, 100, 20),GUIContent("1",fireIcon));
-			GUI.Label (Rect (85, 161, 100, 20),GUIContent("3",meatIcon));
+			GUI.Label (Rect (120, 161, 100, 20),GUIContent("3",meatIcon));
 			if (GUI.Button(Rect(0,185,80,20),"Clothing"))
 				craftClothing();
 			GUI.Label (Rect (85, 186, 100, 20),GUIContent("5",hidesIcon));
