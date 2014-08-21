@@ -9,7 +9,9 @@
  var y = Screen.height;
  var ix = -150;
  var cx = -200;
-  var scrollViewVector : Vector2 = Vector2.zero;
+ var scrollViewVector : Vector2 = Vector2.zero;
+ var scrollViewVector2 : Vector2 = Vector2.zero;
+
 	
 //turn counters
  var turnCounter = 0;
@@ -74,6 +76,8 @@ public var stoneIcon: Texture2D;
 public var rockIcon: Texture2D;
 public var meatIcon: Texture2D;
 public var hidesIcon: Texture2D;
+public var berriesIcon: Texture2D;
+public var fireIcon: Texture2D;
 
 function Start () {
 } 
@@ -108,11 +112,16 @@ function OnGUI() {
     	scrollViewVector = GUI.BeginScrollView (Rect(ix, 80, 100, 250), scrollViewVector, Rect (0, 80, 80, 400));
  		GUI.Label(Rect (0, 80, 30, 30), woodIcon);
  		GUI.Label(Rect (30, 80, 80, 20),""+ wood);
-		GUI.Box(Rect (0, 110, 80, 20),"Stone: "+ stone);
-		GUI.Box(Rect (0, 140, 80, 20),"Berries: "+ berries);
-		GUI.Box(Rect (0, 170, 80, 20),"Rock: "+ rock);
-		GUI.Box(Rect (0, 200, 80, 20),"Meat: "+ meat);
-		GUI.Box(Rect (0, 230, 80, 20),"Hides: "+ hide);
+ 		GUI.Label(Rect (0, 110, 30, 30),stoneIcon);
+		GUI.Label(Rect (30, 110, 80, 20),""+stone);
+		GUI.Label(Rect (0, 140, 30, 30),berriesIcon);
+		GUI.Label(Rect (30, 140, 80, 20),""+berries);
+		GUI.Label(Rect (0, 170, 30, 30),rockIcon);
+		GUI.Label(Rect (30, 170, 80, 20),""+rock);
+		GUI.Label(Rect (0, 200, 30, 30),meatIcon);
+		GUI.Label(Rect (30, 200, 80, 20),""+meat);
+		GUI.Label(Rect (0, 230, 30, 30),hidesIcon);
+		GUI.Label(Rect (30, 230, 80, 20),""+hide);
 		GUI.Box(Rect (0, 260, 80, 20),"DPS: "+ dps);
 		GUI.Box(Rect (0, 290, 80, 20),"DPS: "+ dps);
 		GUI.Box(Rect (0, 320, 80, 20),"DPS: "+ dps);
@@ -131,32 +140,38 @@ function OnGUI() {
 			else
 			cx = Mathf.Lerp(120,-200,1);
 		}
-		    scrollViewVector = GUI.BeginScrollView (Rect(cx, 80, 200, 250), scrollViewVector, Rect (0, 10, 80, 400));
+		    scrollViewVector2 = GUI.BeginScrollView (Rect(cx, 80, 200, 250), scrollViewVector2, Rect (0, 10, 80, 400));
 			//consumption / crafting
 			if (GUI.Button(Rect(0,10,80,20),"Eat Berries"))
 				eatBerries();
-			GUI.Label (Rect (85, 10, 100, 20),"1 Berry");
+			GUI.Label (Rect (85, 10, 100, 20),GUIContent("1", berriesIcon));
 			if (GUI.Button(Rect(0,35,80,20),"Axe"))
 				craftAxe();
-			GUI.Label (Rect (85, 36, 100, 20),"10W + 5S");
+			GUI.Label (Rect (85, 36, 100, 20),GUIContent("10",woodIcon));
+			GUI.Label (Rect (120, 36, 100, 20),GUIContent("5",stoneIcon));
 			if (GUI.Button(Rect(0,60,80,20),"Pickaxe"))
 				craftPickAxe();
-			GUI.Label (Rect (85, 61, 100, 20),"20W + 20S");
+			GUI.Label (Rect (85, 61, 100, 20),GUIContent("20",woodIcon));
+			GUI.Label (Rect (120, 61, 100, 20),GUIContent("20",stoneIcon));
 			if (GUI.Button(Rect(0,85,80,20),"Knife"))
 				craftKnife();
-			GUI.Label (Rect (85, 86, 100, 20),"100W + 40S");
+			GUI.Label (Rect (85, 86, 100, 20),GUIContent("10",woodIcon));
+			GUI.Label (Rect (120, 86, 100, 20),GUIContent("40",stoneIcon));
 			if (GUI.Button(Rect(0,110,80,20),"Spear"))
 				craftSpear();
-			GUI.Label (Rect (85, 111, 100, 20),"200W + 200S");
+			GUI.Label (Rect (85, 111, 100, 20),GUIContent("200",woodIcon));
+			GUI.Label (Rect (120, 111, 100, 20),GUIContent("200",stoneIcon));
 			if (GUI.Button(Rect(0,135,80,20),"Campfire"))
 				craftCampfire();
-			GUI.Label (Rect (85, 136, 100, 20),"20W, 1R");
+			GUI.Label (Rect (85, 136, 100, 20),GUIContent("20",woodIcon));
+			GUI.Label (Rect (85, 136, 100, 20),GUIContent("1",rockIcon));
 			if (GUI.Button(Rect(0,160,80,20),"Cook Meat"))
 				cookMeat();
-			GUI.Label (Rect (85, 161, 100, 20),"1 Fire, 3 Meat");
+			GUI.Label (Rect (85, 161, 100, 20),GUIContent("1",fireIcon));
+			GUI.Label (Rect (85, 161, 100, 20),GUIContent("3",meatIcon));
 			if (GUI.Button(Rect(0,185,80,20),"Clothing"))
 				craftClothing();
-			GUI.Label (Rect (85, 186, 100, 20),"5 Hide");
+			GUI.Label (Rect (85, 186, 100, 20),GUIContent("5",hidesIcon));
 			GUI.EndScrollView();
 
 		if(alert){
@@ -203,6 +218,7 @@ function OnGUI() {
 			clearConditions();
 	}
 }
+
 
 function Update () {
 	if(gameLost == false){
