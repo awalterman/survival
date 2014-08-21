@@ -8,7 +8,7 @@
  var x = Screen.width;
  var y = Screen.height;
  var ix = -150;
- var cx = -150;
+ var cx = -200;
   var scrollViewVector : Vector2 = Vector2.zero;
 	
 //turn counters
@@ -69,6 +69,11 @@ var berries=0;
  var hungerPerCraft = 2;
  var hungerPerAttack = 5;
 
+public var woodIcon: Texture2D;
+public var stoneIcon: Texture2D;
+public var rockIcon: Texture2D;
+public var meatIcon: Texture2D;
+public var hidesIcon: Texture2D;
 
 function Start () {
 } 
@@ -101,7 +106,8 @@ function OnGUI() {
 		}
 		// Begin the ScrollView
     	scrollViewVector = GUI.BeginScrollView (Rect(ix, 80, 100, 250), scrollViewVector, Rect (0, 80, 80, 400));
- 		GUI.Box(Rect (0, 80, 80, 20),"Wood: "+ wood);
+ 		GUI.Label(Rect (0, 80, 30, 30), woodIcon);
+ 		GUI.Label(Rect (30, 80, 80, 20),""+ wood);
 		GUI.Box(Rect (0, 110, 80, 20),"Stone: "+ stone);
 		GUI.Box(Rect (0, 140, 80, 20),"Berries: "+ berries);
 		GUI.Box(Rect (0, 170, 80, 20),"Rock: "+ rock);
@@ -142,7 +148,6 @@ function OnGUI() {
 			if (GUI.Button(Rect(0,110,80,20),"Spear"))
 				craftSpear();
 			GUI.Label (Rect (85, 111, 100, 20),"200W + 200S");
-			
 			if (GUI.Button(Rect(0,135,80,20),"Campfire"))
 				craftCampfire();
 			GUI.Label (Rect (85, 136, 100, 20),"20W, 1R");
