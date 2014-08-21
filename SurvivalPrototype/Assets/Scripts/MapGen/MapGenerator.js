@@ -109,6 +109,14 @@ private function PermuteMap() {
 			}
 			return false;
 		};
+		var shuffle = function(list : TileSpawnData[]) {
+			for (var i = 0; i < list.length - 1; i++) {
+				var t = list[i];
+				var r = Random.Range(i, list.length);
+				list[i] = list[r];
+				list[r] = t;
+			}
+		};
 		var toCheck = new List.<PathFindNode>();
 		var checked = new List.<PathFindNode>();
 		toCheck.Add(new PathFindNode(start, null));
@@ -135,6 +143,7 @@ private function PermuteMap() {
 				x + 1 < w ? tileMap[x + 1, y] : null,
 				y + 1 < h ? tileMap[x, y + 1] : null
 			];
+			shuffle(neighbors);
 			for (var i = 0; i < neighbors.length; i++) {
 				var n = neighbors[i];
 				if (n && !containsTile(checked, n)) {
@@ -150,9 +159,12 @@ private function PermuteMap() {
 		center = tileMap[Random.Range(0, w), Random.Range(0, h)];
 	}
 	var p = center.tile.transform.position;
-	Debug.DrawLine(p, p + Vector3(1, 1, 1), Color.red, 1000, false);
+	// Debug.DrawLine(p, p + Vector3(1, 1, 1), Color.red, 1000, false);
 	while (openSet.Count > 0) {
-		var tile = openSet[0];
+		var index = Random.Range(0, openSet.Count);
+		Debug.Log("Picking: " + index);
+		var tile = openSet[index];
+		openSet.RemoveAt(index);
 		var path = pathFind(tile, center);
 		while (path.Count > 1) {
 			var fst = path[0];
@@ -178,11 +190,10 @@ private function PermuteMap() {
 				d1 = Dir.South;
 				d2 = Dir.North;
 			}
-			Debug.DrawLine(fst.tile.transform.position, snd.tile.transform.position, Color.white, 1000, false);
+			// Debug.DrawLine(fst.tile.transform.position, snd.tile.transform.position, Color.white, 1000, false);
 			fst.tile.GetComponent.<MapTile>().OpenDoors(d1);
 			snd.tile.GetComponent.<MapTile>().OpenDoors(d2);
-			openSet.Remove(fst);
+			// openSet.Remove(fst);
 		}
-		openSet.RemoveAt(0);
 	}
 }
