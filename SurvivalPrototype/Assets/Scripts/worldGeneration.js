@@ -21,16 +21,16 @@ function Start () {
 				
 			}
 			else if(value< (1-totalChance) + berryChance){
-				Instantiate (berries, Vector3(i+Random.Range(-1.0,1.0),j+Random.Range(-1.0,1.0),-3), Quaternion.Euler(90,0,0));
+				Instantiate (berries, Vector3(i+Random.Range(-1.0,1.0), 0, j+Random.Range(-1.0,1.0)), Quaternion.Euler(0,0,0));
 			}
 			else if(value< (1-totalChance) + berryChance + treeChance){
-				Instantiate (tree, Vector3(i+Random.Range(-1.0,1.0),j+Random.Range(-1.0,1.0),-3), Quaternion.Euler(300,6,357));
+				Instantiate (tree, Vector3(i+Random.Range(-1.0,1.0), 0, j+Random.Range(-1.0,1.0)), Quaternion.Euler(0,0,0));
 			}
 			else if(value< (1-totalChance) + berryChance + treeChance + stoneChance){
-				Instantiate (stone, Vector3(i+Random.Range(-1.0,1.0),j+Random.Range(-1.0,1.0),-3), Quaternion.Euler(0,0,0));
+				Instantiate (stone, Vector3(i+Random.Range(-1.0,1.0), 0, j+Random.Range(-1.0,1.0)), Quaternion.Euler(0,0,0));
 			}
 			else if(value< (1-totalChance) + berryChance + treeChance + stoneChance+ rockChance){
-				Instantiate (rock, Vector3(i+Random.Range(-1.0,1.0),j+Random.Range(-1.0,1.0),-3), Quaternion.Euler(90,0,0));
+				Instantiate (rock, Vector3(i+Random.Range(-1.0,1.0), 0, j+Random.Range(-1.0,1.0)), Quaternion.Euler(0,0,0));
 			}
 			
 		}

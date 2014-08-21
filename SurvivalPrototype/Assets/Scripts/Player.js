@@ -2,10 +2,10 @@
 
 public var speed = 3;
 public var spacing = 0.5;
-public var targetPosition = Vector3.zero;
+public var targetPosition = Vector3(25, 0, 25);
 
 function Start () {
-	    position = transform.position;
+	transform.position = targetPosition;
 }
 
 function Update () {
@@ -26,7 +26,10 @@ function Update () {
 			targetPosition = hit.point;
 		}
 	}
+	targetPosition = Vector3(targetPosition.x, 0, targetPosition.z);
+	targetDirection = targetPosition - transform.position;
+	var newDir = Vector3.RotateTowards(transform.forward, targetDirection, speed * Time.deltaTime, 0);
+	transform.rotation = Quaternion.LookRotation(newDir);
+	
     transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-	Camera.main.transform.position.x = transform.position.x;
-	Camera.main.transform.position.z = transform.position.z;
 }
