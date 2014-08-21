@@ -5,8 +5,8 @@
  var alertText = "";
  var timer = 0.0;
 
- var x = Screen.width;
- var y = Screen.height;
+ var x: float;
+ var y: float;
  var ix = -150;
  var cx = -200;
  var scrollViewVector : Vector2 = Vector2.zero;
@@ -82,6 +82,8 @@ public var healthIcon: Texture2D;
 public var energyIcon: Texture2D;
 
 function Start () {
+x= Screen.width;
+y= Screen.height;
 } 
 
 function OnGUI() {
@@ -90,20 +92,20 @@ function OnGUI() {
 	
 	if(gameLost == false && gameWin == false){		
 		//health bar
-		GUI.Label(Rect(x-70,10,100,30),GUIContent("Health",healthIcon));
-		GUI.Box(Rect(x-25,10,100,20),"bar");
-		GUI.Box(Rect(x-25,10,health,20),"fill");
+		GUI.Label(Rect(x-180,7,100,30),GUIContent("Health",healthIcon));
+		GUI.Box(Rect(x-110,10,100,20),"bar");
+		GUI.Box(Rect(x-110,10,health,20),"fill");
 		
 		//energy
-		GUI.Label(Rect(x-70,35,100,30),GUIContent("Energy",energyIcon));
-		GUI.Box(Rect(x-25,35,100,20),"bar");
-		GUI.Box(Rect(x-25,35,health,20),"fill");
+		GUI.Label(Rect(x-180,32,100,30),GUIContent("Energy",energyIcon));
+		GUI.Box(Rect(x-110,35,100,20),"bar");
+		GUI.Box(Rect(x-110,35,health,20),"fill");
 				
 		//condition box
-		GUI.Box(Rect(x-25, 60, 100, 70), "Condition:" + conditionString);
+		GUI.Box(Rect(x-110, 60, 100, 70), "Condition:" + conditionString);
 				 	 	 	 
 		//inventory 
-		if(GUI.Button(Rect(10, y-70, 100,30),"Inventory")){
+		if(GUI.Button(Rect(10, y-40, 100,30),"Inventory")){
 			if(ix == -150)
 			ix = Mathf.Lerp(-150,10,1);
 			
@@ -135,7 +137,7 @@ function OnGUI() {
 		
 		
 		
-		if(GUI.Button(Rect(120, y-70, 100,30),"Crafting")){
+		if(GUI.Button(Rect(120, y-40, 100,30),"Crafting")){
 			if(cx == -200)
 			cx = Mathf.Lerp(-200,120,1);
 			
