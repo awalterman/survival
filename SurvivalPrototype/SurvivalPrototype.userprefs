@@ -2,10 +2,11 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Player.js">
     <Files>
-      <File FileName="Assets/Scripts/Player.js" Line="10" Column="1" />
-      <File FileName="Assets/Scripts/stoneObject.js" Line="15" Column="3" />
-      <File FileName="Assets/Scripts/GameStart.js" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Player.js" Line="38" Column="32" />
+      <File FileName="Assets/Scripts/stoneObject.js" Line="51" Column="20" />
       <File FileName="Assets/Scripts/berriesObject.js" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/treeObject.js" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/rockObject.js" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

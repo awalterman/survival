@@ -30,6 +30,15 @@ function Update () {
 			targetPosition = hit.point;
 		}
 	}
+	moveTowardsTargetPosition(targetPosition);
+}
+
+function OnCollisionEnter (col : Collision) {
+	moveTowardsTargetPosition(transform.position);
+	Debug.Log("Ran into object.");
+}
+
+function moveTowardsTargetPosition(targetPosition : Vector3) {
 	targetPosition = Vector3(targetPosition.x, 0, targetPosition.z);
 	targetDirection = targetPosition - transform.position;
 	Debug.DrawLine(transform.position, targetPosition);
