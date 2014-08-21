@@ -7,14 +7,20 @@ public var allowRandom : boolean = true;
 
 private var spawnedTiles : List.<GameObject> = new List.<GameObject>();
 private var madeMap = [
-	[0, 0, 1, 3, 1, 1, 0],
-	[0, 1, 1, 3, 3, 3, 1],
-	[1, 3, 3, 3, 2, 1, 1],
-	[0, 1, 3, 3, 3, 1, 3],
-	[1, 3, 1, 3, 3, 3, 3],
-	[3, 3, 3, 2, 3, 2, 1],
-	[1, 2, 3, 3, 3, 1, 0],
-	[0, 0, 2, 3, 1, 0, 0]
+	[0, 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 0],
+	[0, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1],
+	[1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1, 1],
+	[0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 3],
+	[1, 3, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+	[3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1],
+	[3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1],
+	[3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1],
+	[3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1],
+	[3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1],
+	[3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1],
+	[3, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1],
+	[1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0],
+	[0, 0, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 0, 0]
 ];
 
 function Start() {
@@ -158,11 +164,10 @@ private function PermuteMap() {
 	while (!center && spawnedTiles.Count > 0) {
 		center = tileMap[Random.Range(0, w), Random.Range(0, h)];
 	}
-	var p = center.tile.transform.position;
+	// var p = center.tile.transform.position;
 	// Debug.DrawLine(p, p + Vector3(1, 1, 1), Color.red, 1000, false);
 	while (openSet.Count > 0) {
 		var index = Random.Range(0, openSet.Count);
-		Debug.Log("Picking: " + index);
 		var tile = openSet[index];
 		openSet.RemoveAt(index);
 		var path = pathFind(tile, center);
@@ -193,7 +198,7 @@ private function PermuteMap() {
 			// Debug.DrawLine(fst.tile.transform.position, snd.tile.transform.position, Color.white, 1000, false);
 			fst.tile.GetComponent.<MapTile>().OpenDoors(d1);
 			snd.tile.GetComponent.<MapTile>().OpenDoors(d2);
-			// openSet.Remove(fst);
+			openSet.Remove(fst);
 		}
 	}
 }
