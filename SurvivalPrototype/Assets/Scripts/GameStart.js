@@ -8,7 +8,8 @@
  var x = Screen.width;
  var y = Screen.height;
  var ix = -150;
-  
+  var scrollViewVector : Vector2 = Vector2.zero;
+	
 //turn counters
  var turnCounter = 0;
  var coldCounter = 0;
@@ -92,21 +93,29 @@ function OnGUI() {
 		
 					 	 	 	 
 		//inventory 
-		if(GUI.Button(Rect(10, y-130, 100,30),"Inventory")){
+		if(GUI.Button(Rect(10, y-70, 100,30),"Inventory")){
 			if(ix == -150)
 			ix = Mathf.Lerp(-150,10,1);
 			
 			else
 			ix = Mathf.Lerp(10,-150,1);
 		}
-		GUI.Box (Rect (ix, 80, 100, 250),"Inventory:"+ inventoryString);
-		GUI.Box (Rect (ix+5, 80, 80, 20),"Wood: "+ wood);
-		GUI.Box (Rect (ix+5, 110, 80, 20),"Stone: "+ stone);
-		GUI.Box (Rect (ix+5, 140, 80, 20),"Berries: "+ berries);
-		GUI.Box (Rect (ix+5, 170, 80, 20),"Rock: "+ rock);
-		GUI.Box (Rect (ix+5, 200, 80, 20),"Meat: "+ meat);
-		GUI.Box (Rect (ix+5, 230, 80, 20),"Hides: "+ hide);
-		GUI.Box (Rect (ix+5, 260, 80, 20),"DPS: "+ dps);
+		// Begin the ScrollView
+    	scrollViewVector = GUI.BeginScrollView (Rect(ix, 80, 100, 250), scrollViewVector, Rect (0, 80, 80, 400));
+ 		GUI.Box(Rect (0, 80, 80, 20),"Wood: "+ wood);
+		GUI.Box(Rect (0, 110, 80, 20),"Stone: "+ stone);
+		GUI.Box(Rect (0, 140, 80, 20),"Berries: "+ berries);
+		GUI.Box(Rect (0, 170, 80, 20),"Rock: "+ rock);
+		GUI.Box(Rect (0, 200, 80, 20),"Meat: "+ meat);
+		GUI.Box(Rect (0, 230, 80, 20),"Hides: "+ hide);
+		GUI.Box(Rect (0, 260, 80, 20),"DPS: "+ dps);
+		GUI.Box(Rect (0, 290, 80, 20),"DPS: "+ dps);
+		GUI.Box(Rect (0, 320, 80, 20),"DPS: "+ dps);
+		GUI.Box(Rect (0, 350, 80, 20),"DPS: "+ dps);
+		GUI.Box(Rect (0, 380, 80, 20),"DPS: "+ dps);
+   		// End the ScrollView
+   	 	GUI.EndScrollView();
+
 		
 		
 		
@@ -183,8 +192,6 @@ function OnGUI() {
 			clearConditions();
 	}
 }
-
-
 
 function Update () {
 	if(gameLost == false){
