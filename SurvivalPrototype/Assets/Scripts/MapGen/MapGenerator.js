@@ -6,6 +6,9 @@ public var tilePrefab : GameObject;
 public var allowRandom : boolean = true;
 public var debugAllowRespawn : boolean = false;
 
+public var player : GameObject;
+
+private var tileDim : float = 1;
 private var spawnedTiles : List.<GameObject> = new List.<GameObject>();
 private var madeMap = [
 	[0, 0, 1, 3, 2, 0, 2, 2, 3, 2, 0, 0, 0, 0, 0],
@@ -25,6 +28,7 @@ private var madeMap = [
 ];
 
 function Start() {
+	tileDim = tilePrefab.transform.localScale.x;
 	PermuteMap();
 }
 
@@ -80,7 +84,7 @@ private function PermuteMap() {
 				var x = j - h/2;
 				newTile = GameObject.Instantiate(tilePrefab);
 				newTile.transform.parent = transform;
-				newTile.transform.position = new Vector3(x, 0, z) + transform.position;
+				newTile.transform.position = new Vector3(x * tileDim, 0, z * tileDim) + transform.position;
 				newTile.GetComponent.<MapTile>().SetDoors(0);
 			}
 			if (newTile) {
@@ -202,4 +206,5 @@ private function PermuteMap() {
 			openSet.Remove(fst);
 		}
 	}
+	player.transform.position = center.tile.transform.position;
 }
