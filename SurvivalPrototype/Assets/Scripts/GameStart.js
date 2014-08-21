@@ -80,6 +80,8 @@ public var berriesIcon: Texture2D;
 public var fireIcon: Texture2D;
 public var healthIcon: Texture2D;
 public var energyIcon: Texture2D;
+public var healthFill: Texture2D;
+public var energyFill: Texture2D;
 
 function Start () {
 x= Screen.width;
@@ -93,13 +95,15 @@ function OnGUI() {
 	if(gameLost == false && gameWin == false){		
 		//health bar
 		GUI.Label(Rect(x-180,7,100,30),GUIContent("Health",healthIcon));
-		GUI.Box(Rect(x-110,10,100,20),"bar");
-		GUI.Box(Rect(x-110,10,health,20),"fill");
+		GUI.Box(Rect(x-110,10,100,20),"");
+		GUI.skin.box.stretchWidth = true;
+		GUI.skin.box.stretchHeight = true;
+		GUI.DrawTexture(Rect(x-110,13,health,12),healthFill,ScaleMode.StretchToFill,true,10.0f);
 		
 		//energy
 		GUI.Label(Rect(x-180,32,100,30),GUIContent("Energy",energyIcon));
-		GUI.Box(Rect(x-110,35,100,20),"bar");
-		GUI.Box(Rect(x-110,35,health,20),"fill");
+		GUI.Box(Rect(x-110,35,100,20),"");
+		GUI.DrawTexture(Rect(x-110,38,health,12),energyFill,ScaleMode.StretchToFill,true,10.0f);
 				
 		//condition box
 		GUI.Box(Rect(x-110, 60, 100, 70), "Condition:" + conditionString);
