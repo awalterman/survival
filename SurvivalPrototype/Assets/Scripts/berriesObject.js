@@ -16,6 +16,7 @@ function Update () {
 
 function OnMouseDown() {
 	if (life <= 0) {
+		Debug.Log("Destroying berry on mouse down.");
 		destroyObject();
 	}
 	var players : GameObject[];
@@ -42,7 +43,7 @@ function gatherBerries(){
 }
 
 function destroyObject() {
-	if (isDestroyed > 0) {
+	if (isDestroyed == 0) {
 		isDestroyed++;
 		Destroy(gameObject);
 	}

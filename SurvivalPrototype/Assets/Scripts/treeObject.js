@@ -51,7 +51,7 @@ public function gatherWood(){
 }
 
 function destroyObject() {
-	if (isDestroyed > 0) {
+	if (isDestroyed == 0) {
 		isDestroyed++;
 		Destroy(gameObject);
 	}
