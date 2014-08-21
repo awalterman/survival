@@ -8,6 +8,7 @@
  var x = Screen.width;
  var y = Screen.height;
  var ix = -150;
+ var cx = -150;
   var scrollViewVector : Vector2 = Vector2.zero;
 	
 //turn counters
@@ -73,11 +74,10 @@ function Start () {
 } 
 
 function OnGUI() {
+	//time survived
 	GUI.Label(Rect(10,10,100,100), "Time Survived: " + timer);
 	
-	if(gameLost == false && gameWin == false){
-		//status bars
-		
+	if(gameLost == false && gameWin == false){		
 		//health bar
 		GUI.Label(Rect(x-70,10,100,30),"Health");
 		GUI.Box(Rect(x-25,10,100,20),"bar");
@@ -90,8 +90,7 @@ function OnGUI() {
 				
 		//condition box
 		GUI.Box(Rect(x-25, 60, 100, 70), "Condition:" + conditionString);
-		
-					 	 	 	 
+				 	 	 	 
 		//inventory 
 		if(GUI.Button(Rect(10, y-70, 100,30),"Inventory")){
 			if(ix == -150)
@@ -119,36 +118,43 @@ function OnGUI() {
 		
 		
 		
-		//world gathering
-		if(isEnemy == false){	
-			//consumption / crafting
-			if (GUI.Button(Rect(500,10,100,20),"Eat Berries"))
-				eatBerries();
-			GUI.Label (Rect (605, 11, 100, 20),"1 Berry");
-			if (GUI.Button(Rect(500,35,100,20),"Craft Axe"))
-				craftAxe();
-			GUI.Label (Rect (605, 36, 100, 20),"10W + 5S");
-			if (GUI.Button(Rect(500,60,100,20),"Craft Pickaxe"))
-				craftPickAxe();
-			GUI.Label (Rect (605, 61, 100, 20),"20W + 20S");
-			if (GUI.Button(Rect(500,85,100,20),"Craft Knife"))
-				craftKnife();
-			GUI.Label (Rect (605, 86, 100, 20),"100W + 40S");
-			if (GUI.Button(Rect(500,110,100,20),"Craft Spear"))
-				craftSpear();
-			GUI.Label (Rect (605, 111, 100, 20),"200W + 200S");
+		if(GUI.Button(Rect(120, y-70, 100,30),"Crafting")){
+			if(cx == -200)
+			cx = Mathf.Lerp(-200,120,1);
 			
-			if (GUI.Button(Rect(500,135,100,20),"Craft Campfire"))
-				craftCampfire();
-			GUI.Label (Rect (605, 136, 100, 20),"20W, 1R");
-			if (GUI.Button(Rect(500,160,100,20),"Cook Meat"))
-				cookMeat();
-			GUI.Label (Rect (605, 161, 100, 20),"1 Fire, 3 Meat");
-			if (GUI.Button(Rect(500,185,100,20),"Craft Clothing"))
-				craftClothing();
-			GUI.Label (Rect (605, 186, 100, 20),"5 Hide");
+			else
+			cx = Mathf.Lerp(120,-200,1);
 		}
-		else if(alert){
+		    scrollViewVector = GUI.BeginScrollView (Rect(cx, 80, 200, 250), scrollViewVector, Rect (0, 10, 80, 400));
+			//consumption / crafting
+			if (GUI.Button(Rect(0,10,80,20),"Eat Berries"))
+				eatBerries();
+			GUI.Label (Rect (85, 10, 100, 20),"1 Berry");
+			if (GUI.Button(Rect(0,35,80,20),"Axe"))
+				craftAxe();
+			GUI.Label (Rect (85, 36, 100, 20),"10W + 5S");
+			if (GUI.Button(Rect(0,60,80,20),"Pickaxe"))
+				craftPickAxe();
+			GUI.Label (Rect (85, 61, 100, 20),"20W + 20S");
+			if (GUI.Button(Rect(0,85,80,20),"Knife"))
+				craftKnife();
+			GUI.Label (Rect (85, 86, 100, 20),"100W + 40S");
+			if (GUI.Button(Rect(0,110,80,20),"Spear"))
+				craftSpear();
+			GUI.Label (Rect (85, 111, 100, 20),"200W + 200S");
+			
+			if (GUI.Button(Rect(0,135,80,20),"Campfire"))
+				craftCampfire();
+			GUI.Label (Rect (85, 136, 100, 20),"20W, 1R");
+			if (GUI.Button(Rect(0,160,80,20),"Cook Meat"))
+				cookMeat();
+			GUI.Label (Rect (85, 161, 100, 20),"1 Fire, 3 Meat");
+			if (GUI.Button(Rect(0,185,80,20),"Clothing"))
+				craftClothing();
+			GUI.Label (Rect (85, 186, 100, 20),"5 Hide");
+			GUI.EndScrollView();
+
+		if(alert){
 			GUI.Label(Rect (300, 20, 100, 50),alertText);
 		}
 	
