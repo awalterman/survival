@@ -5,6 +5,10 @@
  var alertText = "";
  var timer = 0.0;
 
+ var x = Screen.width;
+ var y = Screen.height;
+ var ix = -150;
+  
 //turn counters
  var turnCounter = 0;
  var coldCounter = 0;
@@ -68,60 +72,45 @@ function Start () {
 } 
 
 function OnGUI() {
-	GUI.Label(Rect(0,0,100,100), "Time Survived: " + timer);
+	GUI.Label(Rect(10,10,100,100), "Time Survived: " + timer);
+	
 	if(gameLost == false && gameWin == false){
 		//status bars
-		GUI.Box(Rect(10,5,100,30),"Health:"+health);	
-		GUI.Box(Rect(10,40,100,30),"Hunger:"+hunger);	
-			 
-		//inventory 
-		GUI.Box (Rect (120, 80, 80, 20),"Wood: "+ wood);
-		GUI.Box (Rect (120, 110, 80, 20),"Stone: "+ stone);
-		GUI.Box (Rect (120, 140, 80, 20),"Berries: "+ berries);
-		GUI.Box (Rect (120, 170, 80, 20),"Rock: "+ rock);
-		GUI.Box (Rect (120, 200, 80, 20),"Meat: "+ meat);
-		GUI.Box (Rect (120, 230, 80, 20),"Hides: "+ hide);
-		GUI.Box (Rect (120, 260, 80, 20),"DPS: "+ dps);
 		
-		GUI.Box (Rect (10, 80, 100, 250),"Inventory:"+ inventoryString);
-		GUI.Box (Rect (500, 210, 100, 100),"Tip: "+ tip);
+		//health bar
+		GUI.Label(Rect(x-70,10,100,30),"Health");
+		GUI.Box(Rect(x-25,10,100,20),"bar");
+		GUI.Box(Rect(x-25,10,health,20),"fill");
+		
+		//energy
+		GUI.Label(Rect(x-70,35,100,30),"Energy");
+		GUI.Box(Rect(x-25,35,100,20),"bar");
+		GUI.Box(Rect(x-25,35,health,20),"fill");
+				
+		//condition box
+		GUI.Box(Rect(x-25, 60, 100, 70), "Condition:" + conditionString);
+		
+					 	 	 	 
+		//inventory 
+		if(GUI.Button(Rect(10, y-130, 100,30),"Inventory")){
+			if(ix == -150)
+			ix = Mathf.Lerp(-150,10,1);
+			
+			else
+			ix = Mathf.Lerp(10,-150,1);
+		}
+		GUI.Box (Rect (ix, 80, 100, 250),"Inventory:"+ inventoryString);
+		GUI.Box (Rect (ix+5, 80, 80, 20),"Wood: "+ wood);
+		GUI.Box (Rect (ix+5, 110, 80, 20),"Stone: "+ stone);
+		GUI.Box (Rect (ix+5, 140, 80, 20),"Berries: "+ berries);
+		GUI.Box (Rect (ix+5, 170, 80, 20),"Rock: "+ rock);
+		GUI.Box (Rect (ix+5, 200, 80, 20),"Meat: "+ meat);
+		GUI.Box (Rect (ix+5, 230, 80, 20),"Hides: "+ hide);
+		GUI.Box (Rect (ix+5, 260, 80, 20),"DPS: "+ dps);
+		
+		
 		
 		//world gathering
-		if(isEnemy == false){
-			if(spawner > chanceForRabbit && !rabbitTry && spawner < chanceForDeer)
-				if (GUI.Button(Rect(305,135,50,50),"Rabbit"))
-					catchRabbit();
-			if(spawner > chanceForDeer && !deerTry && spawner< chanceForWolf)
-				if (GUI.Button(Rect(360,135,50,50),"Deer"))
-					catchDeer();
-			if (GUI.Button(Rect(280,280,100,50),"Explore"))
-				{
-					if(hasCampfire){
-						removeItem("Campfire");
-						hasCampfire = false;
-						updateInventory();
-					}
-					spawnWorld();
-					hunger -= hungerPerExplore;
-					updateInventory();
-					if(conditionCheck("Healthy")){
-						health ++;
-					}
-					if(conditionCheck("Injured")){
-						health --;
-					}
-					barUpdate();
-					tip = "";
-				}
-				GUI.Label (Rect (282, 280, 100, 20),""+ spawner);
-		}
-		if(isEnemy == true){
-			GUI.Label (Rect (270, 220, 100, 50)," "+ enemyName + "\n Health: " + enemyHealth);
-			if (GUI.Button(Rect(370,190,45,45),"Fight"))
-				attackEnemy();
-			if (GUI.Button(Rect(370,240,45,45),"Run"))
-				escape();
-		}	
 		if(isEnemy == false){	
 			//consumption / crafting
 			if (GUI.Button(Rect(500,10,100,20),"Eat Berries"))
@@ -153,8 +142,7 @@ function OnGUI() {
 		else if(alert){
 			GUI.Label(Rect (300, 20, 100, 50),alertText);
 		}
-		//conditions
-		GUI.Box(Rect(120, 4, 80, 70), "Condition: \n" + conditionString);	
+	
 	}
 	//gameOver
 	else if (gameLost == true)
