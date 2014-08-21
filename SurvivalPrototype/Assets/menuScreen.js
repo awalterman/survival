@@ -1,12 +1,7 @@
 ﻿#pragma strict
 
-function Start () {
-
-if(GUI.Button(Rect(400,400,50,300), "Start Game")){
+function OnGUI(){
+if(GUI.Button(Rect(200,200,150,150),"Start Game")){
 	Application.LoadLevel("survivalPrototype");	
 }
-}
-
-function Update () {
-
 }
