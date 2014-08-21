@@ -15,6 +15,16 @@ function Update () {
 }
 
 function OnMouseDown() {
-	playerSource.gatherStone();
+	gatherStone();
 	life --;
 	}
+	
+function gatherStone(){
+	if(playerSource.itemCheck("PickAxe")){
+	playerSource.stone += 3;
+	}
+	else{
+	playerSource.stone +=1;
+	}
+	playerSource.hunger -= playerSource.hungerPerCollect;
+}

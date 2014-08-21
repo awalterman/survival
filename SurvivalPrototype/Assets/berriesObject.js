@@ -13,6 +13,12 @@ function Update () {
 }
 
 function OnMouseDown() {
-	playerSource.gatherBerries();
+	gatherBerries();
 	life --;
 	}
+	
+function gatherBerries(){
+	playerSource.berries +=Random.Range(1,2);
+	playerSource.hunger -= playerSource.hungerPerCollect;
+
+}

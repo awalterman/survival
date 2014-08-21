@@ -16,3 +16,8 @@ function OnMouseDown() {
 	playerSource.gatherRock();
 	life --;
 	}
+	
+function gatherRock(){
+	playerSource.rock +=1;
+	playerSource.hunger -= playerSource.hungerPerCollect;
+}

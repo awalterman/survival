@@ -18,3 +18,13 @@ function OnMouseDown() {
 	playerSource.gatherWood();
 	life --;
 	}
+	
+public function gatherWood(){
+	if(playerSource.itemCheck("Axe")){
+	playerSource.wood+= 3;
+	}
+	else{
+	playerSource.wood += 1;
+	}
+	playerSource.hunger -= playerSource.hungerPerCollect;
+	}

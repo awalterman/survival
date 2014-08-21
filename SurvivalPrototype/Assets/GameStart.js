@@ -1,72 +1,72 @@
 ﻿#pragma strict
-private var health = 100;
-private var hunger = 100;
-private var alert = false;
-private var alertText = "";
+ var health = 100;
+ var hunger = 100;
+ var alert = false;
+ var alertText = "";
 
 //resource counters
-private var treeCounter = 0;
-private var rockCounter = 0;
-private var berriesCounter = 0;
-private var stoneCounter = 0;
+ var treeCounter = 0;
+ var rockCounter = 0;
+var berriesCounter = 0;
+ var stoneCounter = 0;
 
 //turn counters
-private var turnCounter = 0;
-private var coldCounter = 0;
-private var gameLost = false;
-private var gameWin = false;
+ var turnCounter = 0;
+ var coldCounter = 0;
+ var gameLost = false;
+ var gameWin = false;
 
 //conditions
-private var conditionList = new Array();
-private var conditionString = "";
-private var turnsToCold = 15;
-private var cold = false;
+ var conditionList = new Array();
+ var conditionString = "";
+ var turnsToCold = 15;
+ var cold = false;
 
 //resources
-private var wood=0;
-private var stone=0;
-private var berries=0;
-private var inventory = new Array ();
-private var inventoryString = "";
-private var tip = "";
-private var rock = 0;
-private var meat = 0;
-private var hide = 0;
-private var dps = 5;
-private var enemyName = "";
-private var enemyHealth = 0;
+ var wood=0;
+ var stone=0;
+var berries=0;
+ var inventory = new Array ();
+ var inventoryString = "";
+ var tip = "";
+ var rock = 0;
+ var meat = 0;
+ var hide = 0;
+ var dps = 5;
+ var enemyName = "";
+ var enemyHealth = 0;
 
 //items
-private var hasAxe = false;
-private var hasPickAxe = false;
-private var hasKnife = false;
-private var hasSpear = false;
-private var hasCampfire = false;
-private var rabbitTry = false;
-private var deerTry = false;
-private var isEnemy = false;
+ var hasAxe = false;
+ var hasPickAxe = false;
+ var hasKnife = false;
+ var hasSpear = false;
+ var hasCampfire = false;
+ var rabbitTry = false;
+ var deerTry = false;
+ var isEnemy = false;
 
 //world generation
-private var spawner = 0;
-private var chanceForBerry = 50;
-private var chanceForTree = 20;
-private var chanceForStone = 75;
-private var chanceForRock = 40;
-private var chanceForRabbit = 70;
-private var chanceForDeer = 80;
-private var chanceForWolf = 85;
-private var chanceForBear = 95;
-private var wolfHealth = 20;
-private var bearHealth = 50;
-private var chanceToEscapeWolf = .6;
-private var chanceToEscapeBear = .8;
-private var bearDPS = 25;
-private var wolfDPS = 15;
-private var hungerPerExplore = 4;
-private var hungerPerCollect = 1;
-private var hungerPerRun = 8;
-private var hungerPerCraft = 2;
-private var hungerPerAttack = 5;
+ var spawner = 0;
+ var chanceForBerry = 50;
+ var chanceForTree = 20;
+ var chanceForStone = 75;
+ var chanceForRock = 40;
+ var chanceForRabbit = 70;
+ var chanceForDeer = 80;
+ var chanceForWolf = 85;
+ var chanceForBear = 95;
+ var wolfHealth = 20;
+ var bearHealth = 50;
+ var chanceToEscapeWolf = .6;
+ var chanceToEscapeBear = .8;
+ var bearDPS = 25;
+ var wolfDPS = 15;
+ var hungerPerExplore = 4;
+ var hungerPerCollect = 1;
+ var hungerPerRun = 8;
+ var hungerPerCraft = 2;
+ var hungerPerAttack = 5;
 
 
 function Start () {
@@ -92,30 +92,6 @@ function OnGUI() {
 		GUI.Box (Rect (500, 210, 100, 100),"Tip: "+ tip);
 		
 		//world gathering
-		if(spawner > chanceForBerry && berriesCounter !=3)
-			if (GUI.Button(Rect(250,80,50,50),"Berry"))
-			{
-				gatherBerries();
-				berriesCounter +=1;
-			}
-		if(spawner > chanceForTree && treeCounter != 3)
-			if (GUI.Button(Rect(305,80,50,50),"Tree"))
-			{
-				gatherWood();
-				treeCounter +=1;
-			}
-		if(spawner > chanceForRock && rockCounter !=3)
-			if (GUI.Button(Rect(360,80,50,50),"Rock"))
-			{
-				gatherRock();
-				rockCounter +=1;
-			}
-		if(spawner > chanceForStone && stoneCounter != 3)
-			if (GUI.Button(Rect(250,135,50,50),"Stone"))
-			{
-				gatherStone();
-				stoneCounter +=1;
-			}
 		if(isEnemy == false){
 			if(spawner > chanceForRabbit && !rabbitTry && spawner < chanceForDeer)
 				if (GUI.Button(Rect(305,135,50,50),"Rabbit"))
@@ -318,21 +294,9 @@ function spawnWorld(){
 	turnCounter ++;
 }
 
-function gatherBerries(){
-	berries +=Random.Range(1,2);
-	hunger -= hungerPerCollect;
-	if(isEnemy == true){
-	enemyDamage();
-	}
-}
 
-function gatherRock(){
-	rock +=1;
-	hunger -= hungerPerCollect;
-	if(isEnemy == true){
-	enemyDamage();
-	}
-}
+
+
 
 function eatBerries(){
  if(berries>0){
@@ -355,18 +319,7 @@ public function gatherWood(){
 	}
 	}
 
-function gatherStone(){
-	if(itemCheck("PickAxe")){
-	stone += 3;
-	}
-	else{
-	stone +=1;
-	}
-	hunger -= hungerPerCollect;
-	if(isEnemy == true){
-	enemyDamage();
-	}
-}
+
 
 function catchRabbit(){
 	rabbitTry = true;
