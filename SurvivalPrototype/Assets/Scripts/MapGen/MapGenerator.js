@@ -207,4 +207,5 @@ private function PermuteMap() {
 		}
 	}
 	player.transform.position = center.tile.transform.position;
+	player.transform.Translate(0, -player.transform.position.y, 0);
 }
