@@ -3,12 +3,7 @@
  var hunger = 100;
  var alert = false;
  var alertText = "";
-
-//resource counters
- var treeCounter = 0;
- var rockCounter = 0;
-var berriesCounter = 0;
- var stoneCounter = 0;
+ var timer = 0.0;
 
 //turn counters
  var turnCounter = 0;
@@ -73,7 +68,7 @@ function Start () {
 } 
 
 function OnGUI() {
-
+	GUI.Label(Rect(0,0,100,100), "Time Survived: " + timer);
 	if(gameLost == false && gameWin == false){
 		//status bars
 		GUI.Box(Rect(10,5,100,30),"Health:"+health);	
@@ -109,10 +104,6 @@ function OnGUI() {
 					spawnWorld();
 					hunger -= hungerPerExplore;
 					updateInventory();
-					treeCounter = 0;
-					rockCounter = 0;
-					berriesCounter = 0;
-					stoneCounter = 0;
 					if(conditionCheck("Healthy")){
 						health ++;
 					}
@@ -208,6 +199,9 @@ function OnGUI() {
 
 
 function Update () {
+	if(gameLost == false){
+		timer += Time.deltaTime;
+	}
 	//are you dead?
 	if(health <=0){
 		gameLost = true;
@@ -306,18 +300,6 @@ function eatBerries(){
 	alert = true;
 	}
 }
-public function gatherWood(){
-	if(itemCheck("Axe")){
-	wood+= 3;
-	}
-	else{
-	wood += 1;
-	}
-	hunger -= hungerPerCollect;
-	if(isEnemy == true){
-	enemyDamage();
-	}
-	}
 
 
 

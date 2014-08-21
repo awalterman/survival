@@ -15,7 +15,7 @@ function Update () {
 }
 
 function OnMouseDown() {
-	playerSource.gatherWood();
+	gatherWood();
 	life --;
 	}
 	

@@ -13,7 +13,7 @@ function Update () {
 }
 
 function OnMouseDown() {
-	playerSource.gatherRock();
+	gatherRock();
 	life --;
 	}
 	
