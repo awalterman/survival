@@ -179,7 +179,6 @@ function playAnimationForState(state:PlayerStatus) {
 function playAnimationFromList(animations:String[]) {
 	var index = Random.Range(0, animations.Length);
 	var animationName = animations[index];
-	Debug.Log("Player animation named " + animationName);
 	animation.CrossFade(animationName);
 }
 
