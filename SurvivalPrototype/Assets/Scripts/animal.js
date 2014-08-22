@@ -271,8 +271,16 @@ function OnMouseDown() {
 	if (isAnimalDead) {
 		return;
 	}
-	if(playerSource.canAttack(this.transform.position)){
-		player.GetComponent.<Player>().playerState= PlayerStatus.ATTACK;
+	
+	var players : GameObject[];
+	var player : GameObject;
+	players = GameObject.FindGameObjectsWithTag("Player");
+	player = players[0];
+	var playerComponent : Player;
+	playerComponent = player.GetComponent(Player);
+	
+	if(playerComponent.canAttack(this.transform.position)){
+		playerComponent.hasAttacked();
 		reduceHP(playerSource.dps);
 		playerSource.energyCountDown();
 		addBloodSplatter();
@@ -287,7 +295,7 @@ function addBloodSplatter() {
 	var playerComponent : Player;
 	playerComponent = player.GetComponent(Player);
 	var effect : GameObject;
-	effect = GameObject.Instantiate(playerComponent.bloodEffect, Vector3(rigidbody.position.x, 1, rigidbody.position.z), Quaternion.Euler(0, 0, 0));
+	effect = GameObject.Instantiate(playerComponent.bloodEffect, Vector3(rigidbody.position.x, 0.5, rigidbody.position.z), Quaternion.Euler(0, 0, 0));
 	effect.particleSystem.Play();
 }
 

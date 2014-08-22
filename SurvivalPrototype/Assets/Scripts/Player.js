@@ -17,6 +17,8 @@ public var spacing = 0.5;
 public var targetPosition = Vector3(25, 0, 25);
 public var targetDirection = Vector3(0,0,0);
 public var collectPace : float = 500;
+public var attackPace : float = 1000;
+public var playerAttackRange : float = 2;
 public var idleAnimations : String[];
 public var walkAnimations : String[];
 public var runAnimations : String[];
@@ -37,6 +39,7 @@ public var playerState = PlayerStatus.IDLE;
 var lastCollectTime : float;
 var positionLastStep : Vector3;
 var movementEnergyCounter : float = 0;
+var lastAttackTime : float;
 
 var cameraOffset : Vector3;
 private var playerSource: GameStart;
@@ -170,7 +173,9 @@ function updateState() {
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
 	Debug.DrawLine(rigidbody.position, targetPosition);
 	var moveDistance = targetDirection.magnitude;
-	if (Time.time * 1000 - lastCollectTime < collectPace) {
+	if (Time.time * 1000 - lastAttackTime < attackPace) {
+		playerState = PlayerStatus.ATTACK;
+	} else if (Time.time * 1000 - lastCollectTime < collectPace) {
 		playerState = PlayerStatus.COLLECTING;
 	} else if (moveDistance > 0.5) {
 		if (playerSource.conditionCheck("Freezing") || playerSource.conditionCheck("Cold")) {
@@ -190,6 +195,10 @@ function isCollecting() {
 
 public function hasCollected() {
 	lastCollectTime = Time.time * 1000;
+}
+
+public function hasAttacked() {
+	lastAttackTime = Time.time * 1000;
 }
 
 function playAnimationForState(state:PlayerStatus) {
@@ -244,5 +253,15 @@ public function wasAttacked() {
 		var effect : GameObject;
 		effect = GameObject.Instantiate(bloodEffect, Vector3(rigidbody.position.x, 1, rigidbody.position.z), Quaternion.Euler(0, 0, 0));
 		effect.particleSystem.Play();
+	}
+}
+
+public function canAttack(pos: Vector3){
+	if (Time.time * 1000 - lastAttackTime > attackPace &&
+		Vector3.Distance(rigidbody.position, pos) < playerAttackRange) {
+		return true;
+	}
+	else{
+		return false;
 	}
 }
