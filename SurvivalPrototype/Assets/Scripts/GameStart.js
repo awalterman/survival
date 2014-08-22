@@ -518,4 +518,12 @@ function clearConditions(){
 	conditionList = new Array();
 }
 
+function canAttack(pos: Vector3){
+	if(Vector3.Distance(this.transform.position, pos)<300){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
 

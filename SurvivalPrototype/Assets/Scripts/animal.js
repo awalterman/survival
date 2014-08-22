@@ -115,13 +115,14 @@ function canAttack () {
 }
 
 function OnMouseDown() {
-	if(canAttack){
+	if(playerSource.canAttack(this.transform.position)){
 		reduceHP(playerSource.dps);
 	}
 }
 
 public function reduceHP (damage:float) {
 	hp -= damage;
+	Debug.Log(hp);
 	// do hurt damage
 	if (hp <= 0) {
 		animalDidDie();
@@ -132,7 +133,7 @@ function animalDidDie () {
 	// update player that the animal has died
 	Debug.Log("enemy died");
 	playAnimation(AnimationTypes.DEAD);
-	Destroy(this.gameObject, 2);
+	Destroy(this.gameObject, 0.5);
 }
 
 function playAnimation(animationType:AnimationTypes) {
