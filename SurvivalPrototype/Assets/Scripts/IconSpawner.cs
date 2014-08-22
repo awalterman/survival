@@ -21,7 +21,7 @@ public class IconSpawner : MonoBehaviour {
 	void Update() {
 		if (spawnedIcon == null && !whoop) {
 			spawnedIcon = GameObject.Instantiate(iconPrefab) as GameObject;
-			transform.forward = uiCamera.transform.forward;
+			spawnedIcon.transform.forward = uiCamera.transform.forward;
 			// spawnedIcon.transform.parent = uiCamera.transform;
 			spawnedIcon.transform.parent = transform;
 			spawnedIcon.renderer.material.mainTexture = textureToSet;
