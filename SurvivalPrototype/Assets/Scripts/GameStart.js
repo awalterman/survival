@@ -383,6 +383,10 @@ function conditionCheck(){
 	if(clothRags>0){
 		turnsToCold = 60;
 	}
+	if(checkNearCampfire == true){
+		removeCondition("Freezing");
+		removeCondition("Cold");
+	}
 }
 
 
