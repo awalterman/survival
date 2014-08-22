@@ -40,45 +40,47 @@ function Start () {
 
 function FixedUpdate () {
 	var isMoving : boolean;
-	isMoving = false;
 	if (isCollecting()) {
 		targetPosition = rigidbody.position;
 	} else {
 		if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
-       		targetPosition.z += spacing;
-       		isMoving = true;
-    	}
-    	if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) { 
-      		targetPosition.z -= spacing;
-     		isMoving = true; 
-    	}
-    	if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
-       		targetPosition.x -= spacing;
-       		isMoving = true;
-    	}
-    		if (Input.GetKeyDown(KeyCode.D)|| Input.GetKeyDown(KeyCode.RightArrow)) {
-       		targetPosition.x += spacing;
-       		isMoving = true;
-    	}
-       
-    	if (Input.GetMouseButtonDown (0)) {
-			var hit: RaycastHit;
-			var ray: Ray;
-			ray = (Camera.main.ScreenPointToRay(Input.mousePosition));
-			if(Physics.Raycast(ray, hit)) {
-				targetPosition = hit.point;
-				isMoving = true;
-			}
-		}
+	       targetPosition.z += spacing;
+	       isMoving = true;
+	    }
+	    if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) { 
+	      	targetPosition.z -= spacing;
+	     	isMoving = true; 
+	    }
+	    if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
+	       targetPosition.x -= spacing;
+	       isMoving = true;
+	    }
+	    if (Input.GetKeyDown(KeyCode.D)|| Input.GetKeyDown(KeyCode.RightArrow)) {
+	       targetPosition.x += spacing;
+	       isMoving = true;
+	    }
 	}
-	
+
 	moveTowardsTargetPosition();
 	updateState();
 	if (isMoving == true) {
 		addMovePingEffect();
 	}
-	if(isMoving == true){
+	if(Vector3.Distance(targetPosition, transform.position) > 0.05) {
 		playerSource.energyCountDown();
+	}
+}
+function FindMovingTarget() {
+	if (Input.GetMouseButtonUp (0) &&
+			!GameStart.didClickGui &&
+			!isCollecting()) {
+		var hit: RaycastHit;
+		var ray: Ray;
+		ray = (Camera.main.ScreenPointToRay(Input.mousePosition));
+		if(Physics.Raycast(ray, hit)) {
+			targetPosition = hit.point;
+			addMovePingEffect();
+		}
 	}
 }
 
@@ -177,7 +179,6 @@ function playAnimationForState(state:PlayerStatus) {
 function playAnimationFromList(animations:String[]) {
 	var index = Random.Range(0, animations.Length);
 	var animationName = animations[index];
-	Debug.Log("Player animation named " + animationName);
 	animation.CrossFade(animationName);
 }
 

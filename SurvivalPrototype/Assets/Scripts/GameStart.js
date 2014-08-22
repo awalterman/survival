@@ -1,4 +1,5 @@
 ﻿#pragma strict
+
  var health = 100;
  var hunger = 100;
  var alert = true;
@@ -96,9 +97,13 @@ public var spearIcon: Texture2D;
 
 public var campfireObject: GameObject;
 
+public static var didClickGui = false;
+private var player : Player;
+
 function Start () {
 x= Screen.width;
 y= Screen.height;
+player = GameObject.Find("Player").GetComponent.<Player>();
 
 InvokeRepeating("energyCountDown", 1, 2);
 InvokeRepeating("alertTextReset", 1, 3);
@@ -174,8 +179,6 @@ function OnGUI() {
    		// End the ScrollView
    	 	GUI.EndScrollView();
 
-		
-		
 		
 		if(GUI.Button(Rect(120, y-40, 100,30),"Crafting")){
 			if(cx == -200)
@@ -278,6 +281,16 @@ function OnGUI() {
 	else if (gameWin == true){
 	  GUI.Label(Rect(100,100,500,500), "You Win - have a lolipop");	
 	}
+	
+	GUI.color = Color(0,0,0,0);
+	if (Input.GetMouseButtonUp(0)) {
+		GameStart.didClickGui = true;
+	}
+	if(GUI.Button(Rect(0, 0, x, y), "")) {
+		GameStart.didClickGui = false;
+	}
+	player.FindMovingTarget();
+	GUI.color = Color(1,1,1,1);
 }
 
 
