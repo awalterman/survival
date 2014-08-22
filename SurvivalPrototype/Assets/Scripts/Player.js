@@ -1,10 +1,28 @@
 ﻿public var camera: GameObject;
 
+enum PlayerStatus {
+	IDLE,
+	WALK,
+	RUN,
+	ATTACK,
+	COLLECTING,
+	DEAD
+}
+
 public var speed = 3;
 public var rotationSpeed = 6;
 public var rotationCutoff = 1;
 public var spacing = 0.5;
 public var targetPosition = Vector3(25, 0, 25);
+public var idleAnimations : String[];
+public var walkAnimations : String[];
+public var runAnimations : String[];
+public var attackAnimations : String[];
+public var collectingAnimations : String[];
+public var deadAnimations : String[];
+var playerState = PlayerStatus.IDLE;
+var lastAttackTime : float;
+
 var cameraOffset : Vector3;
 private var playerSource: GameStart;
 
@@ -36,6 +54,7 @@ function FixedUpdate () {
 		}
 	}
 	moveTowardsTargetPosition();
+	updateState();
 }
 
 function Update(){
@@ -77,4 +96,50 @@ function moveTowardsTargetPosition() {
 	}
 	rigidbody.position = Vector3.MoveTowards(rigidbody.position, targetPosition, speed * Time.deltaTime);
     Camera.main.transform.position = rigidbody.position + cameraOffset;
+}
+
+function updateState() {
+	targetPosition = Vector3(targetPosition.x, 0, targetPosition.z);
+	targetDirection = targetPosition - rigidbody.position;
+	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
+	Debug.DrawLine(rigidbody.position, targetPosition);
+	moveDistance = targetDirection.magnitude;
+	if (moveDistance > 0.5) {
+		playerState = PlayerStatus.WALK;
+	} else {
+		playerState = PlayerStatus.IDLE;
+	}
+	playAnimationForState(playerState);
+}
+
+function playAnimationForState(state:PlayerStatus) {
+	switch(state) {
+		case PlayerStatus.IDLE:
+			playAnimationFromList(idleAnimations);
+			break;
+		case PlayerStatus.WALK:
+			playAnimationFromList(walkAnimations);
+			break;
+		case PlayerStatus.RUN:
+			playAnimationFromList(runAnimations);
+			break;
+		case PlayerStatus.ATTACK:
+			playAnimationFromList(attackAnimations);
+			break;
+		case PlayerStatus.COLLECTING:
+			playAnimationFromList(collectingAnimations);
+			break;
+		case PlayerStatus.DEAD:
+			playAnimationFromList(deadAnimations);
+			break;
+		default:
+			playAnimationFromList(idleAnimations);
+			break;
+	}
+}
+
+function playAnimationFromList(animations:String[]) {
+	var index = Random.Range(0, animations.Length);
+	var animationName = animations[index];
+	animation.CrossFade(animationName);
 }
