@@ -217,6 +217,8 @@ function OnGUI() {
 			if (GUI.Button(Rect(0,160,80,20),"Cook Meat"))
 				if(checkNearCampfire == true)
 					craftItem("cookedMeat","meat",1);
+				else
+					alertText = "Not Near Fire";
 			GUI.Label (Rect (85, 161, 100, 20),GUIContent("1",fireIcon));
 			GUI.Label (Rect (120, 161, 100, 20),GUIContent("1",meatIcon));
 			
