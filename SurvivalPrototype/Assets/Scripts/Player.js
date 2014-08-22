@@ -24,9 +24,12 @@ public var attackAnimations : String[];
 public var collectingAnimations : String[];
 public var deadAnimations : String[];
 public var walkPingEffect : GameObject;
+public var movementDistanceToConsumeEnergy : float = 10;
 
 public var playerState = PlayerStatus.IDLE;
-var lastCollectTime : float;
+var lastCollectTime : float = Time.time * 1000;
+var positionLastStep : Vector3;
+var movementEnergyCounter : float = 0;
 
 var cameraOffset : Vector3;
 private var playerSource: GameStart;
@@ -34,6 +37,7 @@ private var playerSource: GameStart;
 function Start () {
 	cameraOffset = Camera.main.transform.position;
 	rigidbody.position = targetPosition;
+	positionLastStep = targetPosition;
    	Camera.main.transform.position = rigidbody.position + cameraOffset;
 	playerSource = Camera.main.GetComponent("GameStart");
 }
@@ -66,10 +70,20 @@ function FixedUpdate () {
 	if (isMoving == true) {
 		addMovePingEffect();
 	}
-	if(Vector3.Distance(targetPosition, transform.position) > 0.05) {
+	calculateEnergyUsage();
+}
+
+function calculateEnergyUsage() {
+	var currentPosition : Vector3 = rigidbody.position;
+	var distanceMoved : float = Vector3.Distance(currentPosition, positionLastStep);
+	positionLastStep = currentPosition;
+	movementEnergyCounter += distanceMoved;
+	if(movementEnergyCounter > movementDistanceToConsumeEnergy) {
 		playerSource.energyCountDown();
+		movementEnergyCounter = 0;
 	}
 }
+
 function FindMovingTarget() {
 	if (Input.GetMouseButtonUp (0) &&
 			!GameStart.didClickGui &&
