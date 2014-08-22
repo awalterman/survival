@@ -16,9 +16,6 @@ public var westDoor : GameObject;
 
 private var openDoors : Dir = 0;
 
-function Start() {
-}
-
 function OpenDoors(doors : Dir) {
 	SetDoors(openDoors | doors);
 }
@@ -32,6 +29,10 @@ function SetDoors(doors : Dir) {
 		openDoors = doors;
 		UpdateDoors();
 	}
+}
+
+function GetDoors() {
+	return openDoors;
 }
 
 function UpdateDoors() {

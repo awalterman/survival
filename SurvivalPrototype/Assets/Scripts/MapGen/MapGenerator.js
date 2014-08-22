@@ -83,6 +83,7 @@ private function PermuteMap() {
 				var z = -(i - w/2);
 				var x = j - h/2;
 				newTile = GameObject.Instantiate(tilePrefabs[Random.Range(0, tilePrefabs.length)]);
+				newTile.name += " (" + i + ", " + j + ")";
 				newTile.transform.parent = transform;
 				newTile.transform.position = new Vector3(x * tileDim, 0, z * tileDim) + transform.position;
 				newTile.GetComponent.<MapTile>().SetDoors(0);
@@ -206,7 +207,41 @@ private function PermuteMap() {
 			openSet.Remove(fst);
 		}
 	}
-	
+
+	// Clean up redundant walls
+	var wasLast : boolean = false;
+	var mt : MapTile;
+	for (j = 0; j < h; j++) {
+		wasLast = false;
+		for (i = 0; i < w; i++) {
+			if (tileMap[i, j]) {
+				mt = tileMap[i,j].tile.GetComponent.<MapTile>();
+				if (wasLast) {
+					mt.OpenDoors(Dir.North);
+				}
+				wasLast = (Dir.South & mt.GetDoors()) == 0;
+			}
+			else {
+				wasLast = false;
+			}
+		}
+	}
+	for (i = 0; i < w; i++) {
+		wasLast = false;
+		for (j = 0; j < h; j++) {
+			if (tileMap[i, j]) {
+				mt = tileMap[i,j].tile.GetComponent.<MapTile>();
+				if (wasLast) {
+					mt.OpenDoors(Dir.West);
+				}
+				wasLast = (Dir.East & mt.GetDoors()) == 0;
+			}
+			else {
+				wasLast = false;
+			}
+		}
+	}
+
 	if (player) {
 		player.transform.position = center.tile.transform.position;
 		player.transform.Translate(0, -player.transform.position.y, 0);
