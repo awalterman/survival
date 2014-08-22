@@ -14,14 +14,16 @@ public var rotationSpeed = 6;
 public var rotationCutoff = 1;
 public var spacing = 0.5;
 public var targetPosition = Vector3(25, 0, 25);
+public var collectPace : float = 300;
 public var idleAnimations : String[];
 public var walkAnimations : String[];
 public var runAnimations : String[];
 public var attackAnimations : String[];
 public var collectingAnimations : String[];
 public var deadAnimations : String[];
+
 var playerState = PlayerStatus.IDLE;
-var lastAttackTime : float;
+var lastCollectTime : float;
 
 var cameraOffset : Vector3;
 private var playerSource: GameStart;
@@ -76,11 +78,9 @@ function OnCollisionEnter (col : Collision) {
 }
 
 function OnCollisionStay (col : Collision) {
-	print("Still running into object: " + col.transform.name);
 }
 
 function OnCollisionExit(collisionInfo : Collision) {
-	print("No longer in contact with " + collisionInfo.transform.name);
 }
 
 function moveTowardsTargetPosition() {
@@ -89,7 +89,6 @@ function moveTowardsTargetPosition() {
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
 	Debug.DrawLine(rigidbody.position, targetPosition);
 	distance = targetDirection.magnitude;
-	print("Moving " + distance);
 	if (distance > rotationCutoff) {
 		var newDir = Vector3.RotateTowards(transform.forward, targetDirection, rotationSpeed * Time.deltaTime, 0);
 		rigidbody.rotation = Quaternion.LookRotation(newDir);
@@ -104,12 +103,18 @@ function updateState() {
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
 	Debug.DrawLine(rigidbody.position, targetPosition);
 	moveDistance = targetDirection.magnitude;
-	if (moveDistance > 0.5) {
+	if (Time.time * 1000 - lastCollectTime < collectPace) {
+		playerState = PlayerStatus.COLLECTING;
+	} else if (moveDistance > 0.5) {
 		playerState = PlayerStatus.WALK;
 	} else {
 		playerState = PlayerStatus.IDLE;
 	}
 	playAnimationForState(playerState);
+}
+
+public function hasCollected() {
+	lastCollectTime = Time.time * 1000;
 }
 
 function playAnimationForState(state:PlayerStatus) {
