@@ -15,12 +15,17 @@ public var maxRoamDistance : float = 5; // For not dangerous creatures, this is 
 public var animalFreeWaitTimeLoop : int = 50;
 public var animalFreeRoamTimeLoop : int = 500;
 public var fleeTimeLoop : int = 2000;
+public var minMeatReward : int = 10;
+public var maxMeatReward : int = 50;
+public var minHideReward : int = 10;
+public var maxHideReward : int = 50;
 
 public var idleAnimations : String[];
 public var attackAnimation : String[];
 public var angryAnimation : String[];
 public var walkAnimation : String[];
 public var runAnimation : String[];
+public var hurtAnimation : String[];
 public var deathAnimation : String[];
 private var playerSource: GameStart;
 
@@ -34,6 +39,7 @@ private var initialPosition : Vector3;
 private var waitingLoop : int;
 private var runningLoop : int;
 private var fleeingLoop : int;
+private var isAnimalDead : boolean;
 private var currentAnimation : AnimationTypes;
 
 enum AnimationTypes {
@@ -42,6 +48,7 @@ enum AnimationTypes {
 	RUN,
 	ATTACK,
 	ANGRY,
+	HURT,
 	DEAD
 }
 
@@ -52,9 +59,13 @@ function Start () {
 	playerSource = Camera.main.GetComponent("GameStart");
 	waitingLoop = animalFreeWaitTimeLoop;
 	runningLoop = animalFreeRoamTimeLoop;
+	isAnimalDead = false;
 }
 
 function Update () {
+	if (isAnimalDead) {
+		return;
+	}
 	if (isInPlayerRange() && isInLineOfSight()) {
 		if (isDangerous) {
 			isAttacking = true;
@@ -219,6 +230,7 @@ function canAttack () {
 }
 
 function OnMouseDown() {
+//	Debug.Log(playerSource.canAttack(this.transform.position));
 	if(playerSource.canAttack(this.transform.position)){
 		player.GetComponent.<Player>().playerState= PlayerStatus.ATTACK;
 		reduceHP(playerSource.dps);
@@ -228,7 +240,8 @@ function OnMouseDown() {
 
 public function reduceHP (damage:float) {
 	hp -= damage;
-	Debug.Log(hp);
+	Debug.Log(damage);
+	playAnimation(AnimationTypes.HURT);
 	// do hurt damage
 	if (hp <= 0) {
 		animalDidDie();
@@ -238,12 +251,21 @@ public function reduceHP (damage:float) {
 function animalDidDie () {
 	// update player that the animal has died
 	Debug.Log("enemy died");
+	isAnimalDead = true;
+	giveRewardToPlayer();
 	playAnimation(AnimationTypes.DEAD);
-	Destroy(this.gameObject, 0.5);
+	Destroy(this.gameObject, 3.0);
+}
+
+function giveRewardToPlayer () {
+	var meatAmt = Random.Range(minMeatReward, maxMeatReward);
+	var hideAmt = Random.Range(minHideReward, maxHideReward);
+	playerSource.meat += meatAmt;
+	playerSource.hide += hideAmt;
 }
 
 function playAnimation(animationType:AnimationTypes) {
-	if (currentAnimation == animationType) {
+	if (animation.isPlaying && currentAnimation >= animationType) {
 		return;
 	}
 	currentAnimation = animationType;
@@ -266,6 +288,9 @@ function playAnimation(animationType:AnimationTypes) {
 		case AnimationTypes.DEAD:
 			playAnimationFromList(deathAnimation);
 		break;
+		case AnimationTypes.HURT:
+			playAnimationFromList(hurtAnimation);
+		break;
 		default:
 			playAnimationFromList(idleAnimations);
 		break;
@@ -275,6 +300,7 @@ function playAnimation(animationType:AnimationTypes) {
 function playAnimationFromList (animations:String[]) {
 	var index = Random.Range(0, animations.Length);
 	var animationName = animations[index];
-//	Debug.Log(animationName);
+	Debug.Log(animationName);
+	animation[animationName].wrapMode = WrapMode.Once;
 	animation.CrossFade(animationName);
 }
