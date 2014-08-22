@@ -24,12 +24,15 @@ function OnMouseDown() {
 	var distance : float;
 	players = GameObject.FindGameObjectsWithTag("Player");
 	player = players[0];
+	var playerComponent : Player;
+	playerComponent = player.GetComponent(Player);
 	playerPosition = player.transform.position;
 	distance = Vector3.Distance(playerPosition, transform.position);
 	if (distance < collectDistance) {
 		Debug.Log("Collected rock.");
 		gatherRock();
 		life --;
+		playerComponent.hasCollected();
 	} else {
 		Debug.Log("Cannot collect rock.");
 	}
