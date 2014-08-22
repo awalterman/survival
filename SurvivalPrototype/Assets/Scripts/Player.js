@@ -21,6 +21,7 @@ public var runAnimations : String[];
 public var attackAnimations : String[];
 public var collectingAnimations : String[];
 public var deadAnimations : String[];
+public var walkPingEffect : GameObject;
 
 public var playerState = PlayerStatus.IDLE;
 var lastCollectTime : float;
@@ -37,26 +38,40 @@ function Start () {
 }
 
 function FixedUpdate () {
-	if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+	var isMoving : boolean;
+	isMoving = false;
+	if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
        targetPosition.z += spacing;
-    if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-       targetPosition.z -= spacing;
-    if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+       isMoving = true;
+    }
+    if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) { 
+      	targetPosition.z -= spacing;
+     	isMoving = true; 
+    }
+    if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
        targetPosition.x -= spacing;
-    if (Input.GetKeyDown(KeyCode.D)|| Input.GetKeyDown(KeyCode.RightArrow))
+       isMoving = true;
+    }
+    if (Input.GetKeyDown(KeyCode.D)|| Input.GetKeyDown(KeyCode.RightArrow)) {
        targetPosition.x += spacing;
+       isMoving = true;
+    }
        
     if (Input.GetMouseButtonDown (0)) {
 		var hit: RaycastHit;
 		var ray: Ray;
 		ray = (Camera.main.ScreenPointToRay(Input.mousePosition));
-		if(Physics.Raycast(ray, hit)){
+		if(Physics.Raycast(ray, hit)) {
 			targetPosition = hit.point;
+			isMoving = true;
 		}
 	}
 	
 	moveTowardsTargetPosition();
 	updateState();
+	if (isMoving == true) {
+		addMovePingEffect();
+	}
 }
 
 function Update(){
@@ -147,4 +162,12 @@ function playAnimationFromList(animations:String[]) {
 	var index = Random.Range(0, animations.Length);
 	var animationName = animations[index];
 	animation.CrossFade(animationName);
+}
+
+function addMovePingEffect() {
+	Debug.Log("Move ping");
+	var particleObject : GameObject;
+	particleObject = GameObject.Instantiate(walkPingEffect, Vector3(targetPosition.x, 1, targetPosition.z), Quaternion.Euler(90,0,0));
+	particleObject.particleSystem.Play();
+	
 }
