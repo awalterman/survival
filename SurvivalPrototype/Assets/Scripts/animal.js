@@ -9,10 +9,25 @@ public var walkSpeed : float = 1;
 public var runSpeed : float = 2;
 public var attackPace : float = 100;
 public var viewAngle : float = 35;
+public var idleAnimations : String[];
+public var attackAnimation : String[];
+public var angryAnimation : String[];
+public var walkAnimation : String[];
+public var runAnimation : String[];
+public var deathAnimation : String[];
 
 var player : GameObject;
 var lastAttackTime : float;
 var isAttacking : boolean;
+
+enum AnimationTypes {
+	IDLE,
+	WALK,
+	RUN,
+	ATTACK,
+	ANGRY,
+	DEAD
+}
 
 function Start () {
 	player = GameObject.FindGameObjectWithTag("Player");
@@ -30,7 +45,7 @@ function Update () {
 	} else if (isInAttackRange()){
 		tryToAttack();
 	} else {
-		
+		playAnimation(AnimationTypes.IDLE);
 	}
 }
 
@@ -48,16 +63,16 @@ function isInLineOfSight () {
 	if (Physics.Raycast(transform.position, rayDirection, hit)) {
 	
 	 	if (hit.transform == player.transform) {
-	 		var angle = Vector3.Angle(transform.forward, rayDirection);
-	 		
-			Debug.Log(angle);
-			if (angle < viewAngle)
-			{
-				return true;
-			}
+	 		return isFacingPlayer();
 	 	}
 	}
 	return false;
+}
+
+function isFacingPlayer () {
+	var rayDirection = player.transform.position - transform.position;
+	var angle = Vector3.Angle(transform.forward, rayDirection);
+	return (angle < viewAngle);
 }
 
 function isInAttackRange () {
@@ -69,21 +84,21 @@ function distanceFromPlayer () {
 }
 
 function moveTowardsPlayer () {
-	// do movement animation
-	animation.CrossFade("sprint");
+	playAnimation(AnimationTypes.RUN);
 	transform.LookAt(player.transform);
 	transform.position = Vector3.MoveTowards(transform.position, player.transform.position, runSpeed * Time.deltaTime);
 }
 
 function tryToAttack () {
 	if (canAttack()) {
-		Debug.Log("here");
+		if (!isFacingPlayer()) {
+			transform.LookAt(player.transform);
+		}
 		lastAttackTime = Time.time * 1000;
-		animation.CrossFade("crouch");
-		// do attack animation
+		playAnimation(AnimationTypes.ATTACK);
 	} else {
 		// do idle angry animation
-		animation.CrossFade("jump");
+//		playAnimation(AnimationTypes.ANGRY);
 	}
 }
 
@@ -105,8 +120,38 @@ public function reduceHP (damage:float) {
 function animalDidDie () {
 	// update player that the animal has died
 	Debug.Log("enemy died");
-//	animator.SetTrigger(dieStateHash);
-	animation.Play("die");
+	playAnimation(AnimationTypes.DEAD);
 	Destroy(this.gameObject, 2);
 }
 
+function playAnimation(animationType:AnimationTypes) {
+	switch(animationType) {
+		case AnimationTypes.IDLE:
+			playAnimationFromList(idleAnimations);
+		break;
+		case AnimationTypes.WALK:
+			playAnimationFromList(walkAnimation);		
+		break;
+		case AnimationTypes.RUN:
+			playAnimationFromList(runAnimation);
+		break;
+		case AnimationTypes.ANGRY:
+			playAnimationFromList(angryAnimation);
+		break;
+		case AnimationTypes.ATTACK:
+			playAnimationFromList(attackAnimation);
+		break;
+		case AnimationTypes.DEAD:
+			playAnimationFromList(deathAnimation);
+		break;
+		default:
+			playAnimationFromList(idleAnimations);
+		break;
+	}
+}
+
+function playAnimationFromList (animations:String[]) {
+	var index = Random.Range(0, animations.Length);
+	var animationName = animations[index];
+	animation.CrossFade(animationName);
+}
