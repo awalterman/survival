@@ -217,6 +217,8 @@ function OnGUI() {
 			if (GUI.Button(Rect(0,160,80,20),"Cook Meat"))
 				if(checkNearCampfire == true)
 					craftItem("cookedMeat","meat",1);
+				else
+					alertText = "Not Near Fire";
 			GUI.Label (Rect (85, 161, 100, 20),GUIContent("1",fireIcon));
 			GUI.Label (Rect (120, 161, 100, 20),GUIContent("1",meatIcon));
 			
@@ -461,7 +463,8 @@ function craftItem(result:String,item:String, amount:int){
 				
 function craftCampfire(){
 	if(wood>=5 && leaves>=5 ){
-		Instantiate(campfireObject, transform.position, transform.rotation);
+		var player = GameObject.FindGameObjectWithTag("Player");
+		Instantiate(campfireObject, player.transform.position, player.transform.rotation);
 		removeCondition("Cold");
 		removeCondition("Freezing");
 		turnCounter = 0;
@@ -479,7 +482,7 @@ function checkNearCampfire(){
 		var player = GameObject.FindGameObjectWithTag("Player");
 		
 		for(var i=0; i<objects.length; i++){
-			if(Vector3.Distance(player.transform.position, objects[i].transform.position)>2){
+			if(Vector3.Distance(player.transform.position, objects[i].transform.position)<2){
 				return true;
 		}
 	}
