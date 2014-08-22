@@ -27,7 +27,7 @@ public var walkPingEffect : GameObject;
 public var movementDistanceToConsumeEnergy : float = 10;
 
 public var playerState = PlayerStatus.IDLE;
-var lastCollectTime : float = Time.time * 1000;
+var lastCollectTime : float;
 var positionLastStep : Vector3;
 var movementEnergyCounter : float = 0;
 
@@ -40,6 +40,7 @@ function Start () {
 	positionLastStep = targetPosition;
    	Camera.main.transform.position = rigidbody.position + cameraOffset;
 	playerSource = Camera.main.GetComponent("GameStart");
+	lastCollectTime = Time.time * 1000;
 }
 
 function FixedUpdate () {
