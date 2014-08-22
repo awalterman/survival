@@ -74,12 +74,20 @@ function FindMovingTarget() {
 	if (Input.GetMouseButtonUp (0) &&
 			!GameStart.didClickGui &&
 			!isCollecting()) {
-		var hit: RaycastHit;
+		var hits: RaycastHit[];
 		var ray: Ray;
 		ray = (Camera.main.ScreenPointToRay(Input.mousePosition));
-		if(Physics.Raycast(ray, hit)) {
-			targetPosition = hit.point;
-			addMovePingEffect();
+		hits = Physics.RaycastAll(ray);
+		for (var i = 0; i < hits.length; i++) {
+			var hit = hits[i];
+			var obj = hit.transform.gameObject;
+
+			if (obj.name.EndsWith("Floor")) {
+				targetPosition = hit.point;
+				addMovePingEffect();
+			} else {
+				obj.SendMessage("OnMouseDown", null, SendMessageOptions.DontRequireReceiver);
+			}
 		}
 	}
 }
@@ -97,7 +105,7 @@ function Update(){
 }
 
 function OnCollisionEnter (col : Collision) {
-	print("Ran into object: " + col.transform.name);
+	// print("Ran into object: " + col.transform.name);
 	targetPosition = rigidbody.position;
 	moveTowardsTargetPosition();
 }
@@ -179,7 +187,7 @@ function playAnimationForState(state:PlayerStatus) {
 function playAnimationFromList(animations:String[]) {
 	var index = Random.Range(0, animations.Length);
 	var animationName = animations[index];
-	Debug.Log("Player animation named " + animationName);
+	// Debug.Log("Player animation named " + animationName);
 	animation.CrossFade(animationName);
 }
 
