@@ -15,6 +15,8 @@ public var angryAnimation : String[];
 public var walkAnimation : String[];
 public var runAnimation : String[];
 public var deathAnimation : String[];
+private var playerSource: GameStart;
+
 
 var player : GameObject;
 var lastAttackTime : float;
@@ -32,6 +34,8 @@ enum AnimationTypes {
 function Start () {
 	player = GameObject.FindGameObjectWithTag("Player");
 	isAttacking = false;
+	playerSource = Camera.main.GetComponent("GameStart");
+
 }
 
 function Update () {
@@ -96,6 +100,7 @@ function tryToAttack () {
 		}
 		lastAttackTime = Time.time * 1000;
 		playAnimation(AnimationTypes.ATTACK);
+		playerSource.health -= damage;
 	} else {
 		// do idle angry animation
 //		playAnimation(AnimationTypes.ANGRY);
@@ -107,6 +112,12 @@ function canAttack () {
 		return false;
 	}
 	return (((Time.time * 1000) - lastAttackTime) >= attackPace);
+}
+
+function OnMouseDown() {
+	if(canAttack){
+		reduceHP(playerSource.dps);
+	}
 }
 
 public function reduceHP (damage:float) {
