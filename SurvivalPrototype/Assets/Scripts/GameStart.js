@@ -190,24 +190,24 @@ function OnGUI() {
 		    scrollViewVector2 = GUI.BeginScrollView (Rect(cx, 80, 200, 250), scrollViewVector2, Rect (0, 10, 80, 400));
 			//crafting
 			if (GUI.Button(Rect(0,35,80,20),"Axe"))
-				craftItem("axe", "woodShaft",1, "rock", 10);
-			GUI.Label (Rect (85, 36, 100, 20),GUIContent("1",woodShaftIcon));
-			GUI.Label (Rect (120, 36, 100, 20),GUIContent("10",rockIcon));
+				craftItem("axe", "woodShaft",2, "rock", 5);
+			GUI.Label (Rect (85, 36, 100, 20),GUIContent("2",woodShaftIcon));
+			GUI.Label (Rect (120, 36, 100, 20),GUIContent("5",rockIcon));
 			
 			if (GUI.Button(Rect(0,60,80,20),"Pickaxe"))
-				craftItem("pickAxe","woodShaft",3,"sharpenedStone",3);
-			GUI.Label (Rect (85, 61, 100, 20),GUIContent("3",woodShaftIcon));
-			GUI.Label (Rect (120, 61, 100, 20),GUIContent("3",sharpenedStoneIcon));
+				craftItem("pickAxe","woodShaft",4,"sharpenedStone",2);
+			GUI.Label (Rect (85, 61, 100, 20),GUIContent("4",woodShaftIcon));
+			GUI.Label (Rect (120, 61, 100, 20),GUIContent("2",sharpenedStoneIcon));
 			
 			if (GUI.Button(Rect(0,85,80,20),"Knife"))
-				craftItem("knife","woodShaft",1,"sharpenedStone",5);
+				craftItem("knife","woodShaft",1,"sharpenedStone",4);
 			GUI.Label (Rect (85, 86, 100, 20),GUIContent("1",woodShaftIcon));
-			GUI.Label (Rect (120, 86, 100, 20),GUIContent("5",sharpenedStoneIcon));
+			GUI.Label (Rect (120, 86, 100, 20),GUIContent("4",sharpenedStoneIcon));
 			
 			if (GUI.Button(Rect(0,110,80,20),"Spear"))
-				craftItem("spear","woodShaft",5,"sharpenedStone",5);
-			GUI.Label (Rect (85, 111, 100, 20),GUIContent("5",woodShaftIcon));
-			GUI.Label (Rect (120, 111, 100, 20),GUIContent("5",sharpenedStoneIcon));
+				craftItem("spear","woodShaft",6,"sharpenedStone",6);
+			GUI.Label (Rect (85, 111, 100, 20),GUIContent("6",woodShaftIcon));
+			GUI.Label (Rect (120, 111, 100, 20),GUIContent("6",sharpenedStoneIcon));
 			
 			if (GUI.Button(Rect(0,135,80,20),"Campfire"))
 				craftCampfire();
@@ -221,37 +221,37 @@ function OnGUI() {
 			GUI.Label (Rect (120, 161, 100, 20),GUIContent("1",meatIcon));
 			
 			if (GUI.Button(Rect(0,185,80,20),"Cloth Rags"))
-				craftItem("clothRags", "hide",10,"leaves",20);
-			GUI.Label (Rect (85, 186, 100, 20),GUIContent("10",hidesIcon));
-			GUI.Label (Rect (120, 186, 100, 20),GUIContent("20",leavesIcon));
+				craftItem("clothRags", "hide",5,"leaves",5);
+			GUI.Label (Rect (85, 186, 100, 20),GUIContent("5",hidesIcon));
+			GUI.Label (Rect (120, 186, 100, 20),GUIContent("5",leavesIcon));
 			
 			if (GUI.Button(Rect(0,210,80,20),"Wood Shaft"))
-				craftItem("woodShaft","wood",10);
-			GUI.Label (Rect (85, 211, 100, 20),GUIContent("10",woodIcon));
+				craftItem("woodShaft","wood",2);
+			GUI.Label (Rect (85, 211, 100, 20),GUIContent("2",woodIcon));
 			
 			if (GUI.Button(Rect(0,235,80,20),"Sharpened Stone"))
-				craftItem("sharpenedStone","stone",5, "rock", 3);
-			GUI.Label (Rect (85, 236, 100, 20),GUIContent("5",stoneIcon));
-			GUI.Label (Rect (120, 236, 100, 20),GUIContent("3",rockIcon));
+				craftItem("sharpenedStone","stone",2, "rock", 2);
+			GUI.Label (Rect (85, 236, 100, 20),GUIContent("2",stoneIcon));
+			GUI.Label (Rect (120, 236, 100, 20),GUIContent("2",rockIcon));
 			
 			if (GUI.Button(Rect(0,260,80,20),"Leather"))
 				craftItem("leather","hide",2, "sharpenedStone", 1);
 			GUI.Label (Rect (85, 261, 100, 20),GUIContent("2",hidesIcon));
-			GUI.Label (Rect (120, 261, 100, 20),GUIContent("3",sharpenedStoneIcon));
+			GUI.Label (Rect (120, 261, 100, 20),GUIContent("1",sharpenedStoneIcon));
 			
 			if (GUI.Button(Rect(0,285,80,20),"Healing Herb"))
-				craftItem("healingHerb","leaves",10, "berries", 10);
-			GUI.Label (Rect (85, 286, 100, 20),GUIContent("10",leavesIcon));
-			GUI.Label (Rect (120, 286, 100, 20),GUIContent("10",berriesIcon));
+				craftItem("healingHerb","leaves",5, "berries", 2);
+			GUI.Label (Rect (85, 286, 100, 20),GUIContent("5",leavesIcon));
+			GUI.Label (Rect (120, 286, 100, 20),GUIContent("2",berriesIcon));
 			
 			if (GUI.Button(Rect(0,310,80,20),"Armor"))
 				craftItem("armor","leather",5);
 			GUI.Label (Rect (85, 311, 100, 20),GUIContent("5",leatherIcon));
 			
 			if (GUI.Button(Rect(0,335,80,20),"Stone Axe"))
-				craftItem("stoneAxe","woodShaft",3, "sharpenedStone", 5);
-			GUI.Label (Rect (85, 336, 100, 20),GUIContent("3",woodShaftIcon));
-			GUI.Label (Rect (120, 336, 100, 20),GUIContent("5",sharpenedStoneIcon));
+				craftItem("stoneAxe","woodShaft",4, "sharpenedStone", 2);
+			GUI.Label (Rect (85, 336, 100, 20),GUIContent("4",woodShaftIcon));
+			GUI.Label (Rect (120, 336, 100, 20),GUIContent("2",sharpenedStoneIcon));
 			GUI.EndScrollView();
 			GUI.Label(Rect (300, 20, 300, 200),alertText);
 
