@@ -23,8 +23,9 @@ public class IconSpawner : MonoBehaviour {
 			spawnedIcon = GameObject.Instantiate(iconPrefab) as GameObject;
 			transform.forward = uiCamera.transform.forward;
 			// spawnedIcon.transform.parent = uiCamera.transform;
+			spawnedIcon.transform.parent = transform;
 			spawnedIcon.renderer.material.mainTexture = textureToSet;
-			whoop = true;
+			// whoop = true;
 		}
 
 		if (spawnedIcon != null) {
