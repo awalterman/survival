@@ -22,8 +22,8 @@
 //conditions
  var conditionList = new Array();
  var conditionString = "";
- var turnsToCold = 15;
- var cold = false;
+ var turnsToCold = 30;
+ var turnsToFreezing = 10; 
 
 //resources
  var wood=0;
@@ -68,11 +68,6 @@ var berries=0;
  var chanceToEscapeBear = .8;
  var bearDPS = 25;
  var wolfDPS = 15;
- var hungerPerExplore = 4;
- var hungerPerCollect = 1;
- var hungerPerRun = 8;
- var hungerPerCraft = 2;
- var hungerPerAttack = 5;
 
 public var woodIcon: Texture2D;
 public var stoneIcon: Texture2D;
@@ -106,6 +101,8 @@ x= Screen.width;
 y= Screen.height;
 
 InvokeRepeating("energyCountDown", 1, 2);
+InvokeRepeating("alertTextReset", 1, 3);
+InvokeRepeating("turnCounterUpdate", 1, 3);
 } 
 
 function OnGUI() {
@@ -294,6 +291,13 @@ function Update () {
 	}
 	//update conditions
 	conditionCheck();
+	if(conditionCheck("Freezing")){
+		hunger -= 1;
+		health -=1;	
+	}
+	if(conditionCheck("Starving")){
+		health -=1;
+	}
 	//health and hunger updater
 	//spawn new world objects
 	//hunger and health shouldnt be more than 100 or less than 0
@@ -317,13 +321,17 @@ function alertTextReset(){
 	alertText = "";	
 }
 
+function turnCounterUpdate(){
+	turnCounter +=1;
+}
+
 function conditionCheck(){
-	if(turnCounter - coldCounter > (turnsToCold - 5) && conditionCheck("Cold") != true){
+	if(turnCounter > turnsToCold&& conditionCheck("Cold") != true){
 		conditionList.Add("Cold");
 		removeCondition("Healthy");
 		updateConditions();
 	}
-	if(turnCounter - coldCounter > turnsToCold && conditionCheck("Freezing") != true){
+	else if(turnCounter > turnsToCold + turnsToFreezing && conditionCheck("Freezing") != true){
 		conditionList.Add("Freezing");
 		removeCondition("Healthy");
 		removeCondition("Cold");
@@ -352,7 +360,14 @@ function conditionCheck(){
 			removeCondition("Healthy");
 			updateConditions();
 		}	
-	}	
+	}
+	if(armor>0){
+		removeCondition("Freezing");
+		removeCondition("Cold");
+		}
+	if(clothRags>0){
+		turnsToCold = 60;
+	}
 }
 
 
@@ -430,10 +445,8 @@ function craftCampfire(){
 		Instantiate(campfireObject, transform.position, transform.rotation);
 		removeCondition("Cold");
 		removeCondition("Freezing");
+		turnCounter = 0;
 		wood -=20;
-		cold = false;
-		coldCounter = turnCounter;
-		hunger -= hungerPerCraft;
 		alertEvent("Campfire Crafted and Placed \n Exploring will leave it behind");
 	}
 	else{
