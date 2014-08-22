@@ -70,17 +70,17 @@ function Update(){
 }
 
 function OnCollisionEnter (col : Collision) {
-	print("Ran into object: " + col.transform.name);
+	// print("Ran into object: " + col.transform.name);
 	targetPosition = rigidbody.position;
 	moveTowardsTargetPosition();
 }
 
 function OnCollisionStay (col : Collision) {
-	print("Still running into object: " + col.transform.name);
+	// print("Still running into object: " + col.transform.name);
 }
 
 function OnCollisionExit(collisionInfo : Collision) {
-	print("No longer in contact with " + collisionInfo.transform.name);
+	// print("No longer in contact with " + collisionInfo.transform.name);
 }
 
 function moveTowardsTargetPosition() {
@@ -89,7 +89,7 @@ function moveTowardsTargetPosition() {
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
 	Debug.DrawLine(rigidbody.position, targetPosition);
 	distance = targetDirection.magnitude;
-	print("Moving " + distance);
+	// print("Moving " + distance);
 	if (distance > rotationCutoff) {
 		var newDir = Vector3.RotateTowards(transform.forward, targetDirection, rotationSpeed * Time.deltaTime, 0);
 		rigidbody.rotation = Quaternion.LookRotation(newDir);
