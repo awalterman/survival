@@ -17,9 +17,6 @@ function Update () {
 }
 
 function OnMouseDown() {
-	gatherWood();
-	life --;
-	
 	if (life <= 0) {
 		destroyObject();
 	}

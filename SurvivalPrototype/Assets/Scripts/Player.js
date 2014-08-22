@@ -10,6 +10,8 @@ var cameraOffset : Vector3;
 function Start () {
 	cameraOffset = Camera.main.transform.position;
 	transform.position = targetPosition;
+   	Camera.main.transform.position = transform.position + cameraOffset;
+	oldPosition = transform.position;
 }
 
 function Update () {
@@ -34,21 +36,27 @@ function Update () {
 }
 
 function OnCollisionEnter (col : Collision) {
-	moveTowardsTargetPosition(transform.position);
-	Debug.Log("Ran into object.");
+	print("Ran into object: " + col.transform.name);
+	moveTowardsTargetPosition(rigidbody.position);
+}
+
+function OnCollisionStay (col : Collision) {
+	print("Still running into object: " + col.transform.name);
+}
+
+function OnCollisionExit(collisionInfo : Collision) {
+	print("No longer in contact with " + collisionInfo.transform.name);
 }
 
 function moveTowardsTargetPosition(targetPosition : Vector3) {
 	targetPosition = Vector3(targetPosition.x, 0, targetPosition.z);
 	targetDirection = targetPosition - transform.position;
 	Debug.DrawLine(transform.position, targetPosition);
-	Debug.DrawLine(transform.position, transform.position + targetDirection);
 	distance = targetDirection.magnitude;
 	if (distance > rotationCutoff) {
 		var newDir = Vector3.RotateTowards(transform.forward, targetDirection, rotationSpeed * Time.deltaTime, 0);
-		transform.rotation = Quaternion.LookRotation(newDir);
+		rigidbody.rotation = Quaternion.LookRotation(newDir);
 	}
-	
-    transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+	rigidbody.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
     Camera.main.transform.position = transform.position + cameraOffset;
 }
