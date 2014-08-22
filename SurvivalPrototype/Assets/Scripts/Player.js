@@ -6,12 +6,15 @@ public var rotationCutoff = 1;
 public var spacing = 0.5;
 public var targetPosition = Vector3(25, 0, 25);
 var cameraOffset : Vector3;
+private var playerSource: GameStart;
+
 
 function Start () {
 	cameraOffset = Camera.main.transform.position;
 	rigidbody.position = targetPosition;
    	Camera.main.transform.position = rigidbody.position + cameraOffset;
 	oldPosition = rigidbody.position;
+	playerSource = Camera.main.GetComponent("GameStart");
 }
 
 function FixedUpdate () {
@@ -33,6 +36,18 @@ function FixedUpdate () {
 		}
 	}
 	moveTowardsTargetPosition();
+}
+
+function Update(){
+	if(playerSource.conditionCheck("Freezing")){
+		speed = 2.25;
+	}
+	else if(playerSource.conditionCheck("Cold")){
+		speed = 2.55;
+	}
+	else{
+		speed = 3.0;
+	}
 }
 
 function OnCollisionEnter (col : Collision) {

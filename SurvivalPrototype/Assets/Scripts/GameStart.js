@@ -52,16 +52,6 @@ var berries=0;
  var knife = 0;
  var spear = 0;
 
-//items
- var hasAxe = false;
- var hasPickAxe = false;
- var hasKnife = false;
- var hasSpear = false;
- var hasCampfire = false;
- var rabbitTry = false;
- var deerTry = false;
- var isEnemy = false;
-
 //world generation
  var spawner = 0;
  var chanceForBerry = 50;
@@ -194,11 +184,7 @@ function OnGUI() {
 			cx = Mathf.Lerp(120,-200,1);
 		}
 		    scrollViewVector2 = GUI.BeginScrollView (Rect(cx, 80, 200, 250), scrollViewVector2, Rect (0, 10, 80, 400));
-			//consumption / crafting
-			if (GUI.Button(Rect(0,10,80,20),"Eat Berries"))
-				eatBerries();
-			GUI.Label (Rect (85, 10, 100, 20),GUIContent("1", berriesIcon));
-			
+			//crafting
 			if (GUI.Button(Rect(0,35,80,20),"Axe"))
 				craftItem("axe", "woodShaft",1, "rock", 10);
 			GUI.Label (Rect (85, 36, 100, 20),GUIContent("1",woodShaftIcon));
@@ -263,6 +249,24 @@ function OnGUI() {
 			GUI.Label (Rect (120, 336, 100, 20),GUIContent("5",sharpenedStoneIcon));
 			GUI.EndScrollView();
 
+		//consumables
+		if(berries>0){
+			if (GUI.Button(Rect(230,y-40,30,30),berriesIcon))
+				eatBerries();
+			}
+		if(meat>0){
+			if (GUI.Button(Rect(280,y-40,30,30),meatIcon))
+				eatRawMeat();
+		}
+		if(cookedMeat>0){
+			if (GUI.Button(Rect(330,y-40,30,30),cookedMeatIcon))
+				eatMeat();
+		}
+		if(healingHerb>0){
+			if (GUI.Button(Rect(380,y-40,30,30),healingHerbIcon))
+				eatHealingHerb();
+		}
+
 		if(alert){
 			GUI.Label(Rect (300, 20, 100, 50),alertText);
 		}
@@ -281,7 +285,6 @@ function OnGUI() {
 	if (GUI.Button(Rect(830,360,50,30),"Reset")){
 			health = 100;
 			hunger = 100;
-			spawnWorld();
 			wood = 0;
 			rock = 0;
 			stone = 0;
@@ -292,14 +295,6 @@ function OnGUI() {
 			turnsToCold = 15;
 			inventory = new Array();
 			inventoryString = "";
-			hasAxe = false;
-			hasPickAxe = false;
-			hasKnife = false;
-			hasSpear = false;
-			hasCampfire = false;
-			rabbitTry = false;
-			deerTry = false;
-			isEnemy = false;
 			dps = 5;
 			cold = false;
 			coldCounter = 0;
@@ -352,12 +347,12 @@ function conditionCheck(){
 			conditionList.Add("Healthy");
 			updateConditions();
 		}
-		else if(health < 76 && health > 50 && conditionCheck("Fair Health") != true)
+		else if(health < 76 && health > 24 && conditionCheck("Fair Health") != true)
 		{
 			conditionList.Add("Fair Health");
 			updateConditions();
 		}
-		else if(health < 51 && conditionCheck("Injured") != true)
+		else if(health < 25 && conditionCheck("Injured") != true)
 		{
 			conditionList.Add("Injured");
 			updateConditions();
@@ -382,24 +377,6 @@ function barUpdate()
 }
 
 
-function spawnWorld(){
-	spawner = Random.value*100;
-	if(spawner> chanceForBear){
-		isEnemy = true;
-		enemyName = "Bear";
-		enemyHealth = bearHealth;
-	}
-	if(spawner > chanceForWolf && spawner < chanceForBear){
-		isEnemy = true;
-		enemyName = "Wolf";
-		enemyHealth = wolfHealth;
-	}
-	rabbitTry = false;
-	deerTry = false;
-	turnCounter ++;
-}
-
-
 
 
 
@@ -412,6 +389,29 @@ function eatBerries(){
 	}
 }
 
+function eatRawMeat(){
+	meat --;
+	hunger += 25;
+	health -= 15;
+	alertText = "15 Health Lost - 25 Hunger Gained";
+	alert = true;
+}
+
+function eatMeat(){
+	cookedMeat --;
+	hunger += 30;
+	health += 25;
+	alertText = "30 Hunger Gained - 25 Health Gained";
+	alert = true;
+}
+
+function eatHealingHerb(){
+	healingHerb --;
+	hunger +=10;
+	health +=10;
+	alertText = "10 Hunger Gained - 10 Health Gained";
+	alert = true;
+}
 
 	
 function craftItem(result:String,item:String, amount:int, item2:String, amount2:int){
@@ -430,13 +430,12 @@ function craftItem(result:String,item:String, amount:int, item2:String, amount2:
 	else{
 		alertText = "Not Enough Resource";
 	}
+	updateDPS();
 	return result;
 
 }
 
 function craftItem(result:String,item:String, amount:int){
-
-//Debug.Log(result +"  " + item +"  " + amount);
 	var rField = typeof(GameStart).GetField(result);
 	var iField = typeof(GameStart).GetField(item);
 	var rslt :int = rField.GetValue(this);
@@ -449,12 +448,14 @@ function craftItem(result:String,item:String, amount:int){
 	else{
 		alertText = "Not Enough Resource";
 	}
+	updateDPS();
 	return result;
 }
 				
 function craftCampfire(){
 	if(wood>20 && rock>1 ){
-		hasCampfire = true;
+		removeCondition("Cold");
+		removeCondition("Freezing");
 		wood -=20;
 		cold = false;
 		coldCounter = turnCounter;
@@ -466,7 +467,18 @@ function craftCampfire(){
 	}
 }
 
-
+function updateDPS(){
+	if(axe != 0)
+		dps = 5;
+ 	if(pickAxe != 0)
+ 		dps = 5;
+ 	if(stoneAxe != 0)
+ 		dps = 15;
+ 	if(knife != 0)
+ 		dps = 20;
+ 	if(spear != 0)
+ 		dps = 30;
+}
 
 function alertEvent(text:String){
 	alert = true;
