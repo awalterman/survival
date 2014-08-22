@@ -38,7 +38,7 @@ function OnMouseDown() {
 }
 	
 function gatherStone(){
-	if(playerSource.itemCheck("PickAxe")){
+	if(playerSource.pickAxe>0){
 	playerSource.stone += 3;
 	}
 	else{

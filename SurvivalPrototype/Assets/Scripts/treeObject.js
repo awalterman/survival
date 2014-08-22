@@ -38,7 +38,7 @@ function OnMouseDown() {
 }
 	
 public function gatherWood(){
-	if(playerSource.itemCheck("Axe")){
+	if(playerSource.axe>0){
 	playerSource.wood+= 3;
 	}
 	else{

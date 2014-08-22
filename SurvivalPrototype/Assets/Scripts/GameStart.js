@@ -413,27 +413,6 @@ function eatBerries(){
 }
 
 
-
-function catchRabbit(){
-	rabbitTry = true;
-	if(itemCheck("Axe") || itemCheck("PickAxe") || itemCheck("Knife")){
-		meat += 3;
-		hide +=1;
-		hunger -= hungerPerCollect;
-		alertEvent("Rabbit Caught");
-	}
-	else if(Random.value > .5){
-		meat += 3;
-		hide +=1;
-		hunger -= hungerPerCollect;
-		alertEvent("Rabbit Caught");
-	}
-	else{
-		tip = "Try crafting a \n weapon to catch \n zrabbits better";
-		hunger -= hungerPerCollect;
-	}
-}
-
 	
 function craftItem(result:String,item:String, amount:int, item2:String, amount2:int){
 	var rField = typeof(GameStart).GetField(result);
@@ -448,6 +427,9 @@ function craftItem(result:String,item:String, amount:int, item2:String, amount2:
 		i2Field.SetValue(this, itm2 - amount2);
 		alertEvent(result.GetType().Name + " Crafted");
 	}
+	else{
+		alertText = "Not Enough Resource";
+	}
 	return result;
 
 }
@@ -461,82 +443,18 @@ function craftItem(result:String,item:String, amount:int){
 	var itm :int = iField.GetValue(this);
 	if (itm > amount){
 		rField.SetValue(this, rslt + 1)	;
-		updateInventory();
 		iField.SetValue(this, itm - amount);
 		alertEvent(result.GetType().Name + " Crafted");
+	}
+	else{
+		alertText = "Not Enough Resource";
 	}
 	return result;
 }
 				
-function craftAxe(){
-	if(wood>=10 && stone>=5 && hasAxe == false){
-		hasAxe = true;
-		inventory.Add("Axe");
-		updateInventory();
-		wood -=10;
-		stone -=5;
-		dps = 10;
-		hunger -= hungerPerCraft;
-		alertEvent("Axe Crafted");
-	}
-		else{
-	alertEvent("Not Enough Resources");
-	}
-}
-
-function craftPickAxe(){
-	if(wood>20 && stone>20 && hasPickAxe == false){
-		hasPickAxe = true;
-		inventory.Add("PickAxe");
-		updateInventory();
-		wood -=20;
-		stone -=20;
-		dps = 10;
-		hunger -= hungerPerCraft;
-		alertEvent("Pick Axe Crafted");
-	}
-		else{
-	alertEvent("Not Enough Resources");
-	}
-}
-
-function craftKnife(){
-	if(wood>100 && stone>40 && hasKnife == false){
-		hasKnife = true;
-		inventory.Add( "Knife");
-		updateInventory();
-		wood -=100;
-		stone -=40;
-		dps = 30;
-		hunger -= hungerPerCraft;
-		alertEvent("Knife Crafted");
-	}
-		else{
-	alertEvent("Not Enough Resources");
-	}
-}
-
-function craftSpear(){
-	if(wood>200 && stone>200 && hasSpear == false){
-		hasSpear = true;
-		inventory.Add("Spear");
-		updateInventory();
-		wood -=200;
-		stone -=200;
-		dps = 50;
-		hunger -= hungerPerCraft;
-		alertEvent("Spear Crafted");
-	}
-		else{
-	alertEvent("Not Enough Resources");
-	}
-}
-
 function craftCampfire(){
 	if(wood>20 && rock>1 ){
 		hasCampfire = true;
-		inventory.Add("Campfire");
-		updateInventory();
 		wood -=20;
 		cold = false;
 		coldCounter = turnCounter;
@@ -547,60 +465,6 @@ function craftCampfire(){
 	alertEvent("Not Enough Resources");
 	}
 }
-
-function cookMeat(){
-	if(hasCampfire && meat>=3){
-		meat -=3;
-		health +=10;
-		clearConditions();
-		hunger += 50;
-		hunger -= hungerPerCraft;
-		alertEvent("10 Health Gained \n 50 Hunger Gained");
-	}
-		else{
-	alertEvent("Not Enough Resources");
-	}
-}
-
-function craftClothing(){
-	if(hide>5){
-	hide -= 5;
-	inventory.Add("Clothing");
-	turnsToCold = 50;
-	hunger -= hungerPerCraft;
-	alertEvent("Clothing Crafted");
-	}
-	else{
-	alertEvent("Not Enough Resources");
-	}
-}
-
-function removeItem(item: String){
-	for(var i =0; i<inventory.length; i++){
-	if(inventory[i] == item){
-		inventory.RemoveAt(i);
-		updateInventory();
-	}
-	}
-}
-
-function updateInventory(){
-	inventoryString = "";
-	for(var i =0; i<inventory.length; i++){
-	inventoryString += "\n " + inventory[i];
-	}
-}
-
-function itemCheck(item: String)
-{
-	for(var i =0; i<inventory.length; i++){
-		if(inventory[i] == item){
-			return true;
-		}
-	}
-	return false;
-}
-
 
 
 
