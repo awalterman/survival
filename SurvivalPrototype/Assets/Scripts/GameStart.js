@@ -99,6 +99,8 @@ public var stoneAxeIcon: Texture2D;
 public var knifeIcon: Texture2D;
 public var spearIcon: Texture2D;
 
+public var campfireObject: GameObject;
+
 function Start () {
 x= Screen.width;
 y= Screen.height;
@@ -453,7 +455,8 @@ function craftItem(result:String,item:String, amount:int){
 }
 				
 function craftCampfire(){
-	if(wood>20 && rock>1 ){
+	if(wood>10 && rock>5 ){
+		Instantiate(campfireObject, transform.position, transform.rotation);
 		removeCondition("Cold");
 		removeCondition("Freezing");
 		wood -=20;
