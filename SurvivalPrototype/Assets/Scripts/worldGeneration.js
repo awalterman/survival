@@ -18,7 +18,7 @@ function Start () {
 	for(var i = 5; i< worldSizeX; i+=3 ){
 		for(var j = 5; j<worldSizeY;j+=3){
 			var value = Random.value;
-			var obj = null;
+			var obj:GameObject = null;
 			if(value< 1 - totalChance){
 				
 			}
