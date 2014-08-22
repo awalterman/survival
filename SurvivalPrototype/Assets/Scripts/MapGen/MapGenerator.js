@@ -6,7 +6,7 @@ public var tilePrefabs : GameObject[];
 public var allowRandom : boolean = true;
 public var debugAllowRespawn : boolean = false;
 
-public var player : GameObject;
+private var player : GameObject;
 
 private var tileDim : float = 1;
 private var spawnedTiles : List.<GameObject> = new List.<GameObject>();
@@ -28,6 +28,7 @@ private var madeMap = [
 ];
 
 function Start() {
+	player = GameObject.Find("Player");
 	tileDim = tilePrefabs[0].transform.localScale.x;
 	PermuteMap();
 }
