@@ -1,8 +1,8 @@
 ﻿#pragma strict
 
-function ONGUI() {
-	GUI.Label(Rect(150,150,500,500), "Game Over");
-	if(GUI.Button(Rect(150,200,100,40), "Reset Game")){
+function OnGUI() {
+	GUI.Label(Rect(Screen.width/2,Screen.height/2,500,500), "Game Over");
+	if(GUI.Button(Rect(Screen.width/2,(Screen.height/2)+30,100,40), "Reset Game")){
 		Application.LoadLevel("survivalPrototype");	
 	}
 }
