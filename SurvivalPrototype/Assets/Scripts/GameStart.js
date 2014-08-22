@@ -1,7 +1,7 @@
 ﻿#pragma strict
  var health = 100;
  var hunger = 100;
- var alert = false;
+ var alert = true;
  var alertText = "";
  var timer = 0.0;
 
@@ -104,6 +104,8 @@ public var campfireObject: GameObject;
 function Start () {
 x= Screen.width;
 y= Screen.height;
+
+InvokeRepeating("energyCountDown", 1, 2);
 } 
 
 function OnGUI() {
@@ -121,7 +123,7 @@ function OnGUI() {
 		//energy
 		GUI.Label(Rect(x-180,32,100,30),GUIContent("Energy",energyIcon));
 		GUI.Box(Rect(x-110,35,100,20),"");
-		GUI.DrawTexture(Rect(x-110,38,health,12),energyFill,ScaleMode.StretchToFill,true,10.0f);
+		GUI.DrawTexture(Rect(x-110,38,hunger,12),energyFill,ScaleMode.StretchToFill,true,10.0f);
 				
 		//condition box
 		GUI.Box(Rect(x-110, 60, 100, 70), "Condition:" + conditionString);
@@ -270,7 +272,7 @@ function OnGUI() {
 		}
 
 		if(alert){
-			GUI.Label(Rect (300, 20, 100, 50),alertText);
+			GUI.Label(Rect ((x/2)-50, 20, 100, 50),alertText);
 		}
 	
 	}
@@ -281,27 +283,6 @@ function OnGUI() {
 	}
 	else if (gameWin == true){
 	  GUI.Label(Rect(100,100,500,500), "You Win - have a lolipop");	
-	}
-	
-	//reset game
-	if (GUI.Button(Rect(830,360,50,30),"Reset")){
-			health = 100;
-			hunger = 100;
-			wood = 0;
-			rock = 0;
-			stone = 0;
-			meat = 0;
-			hide = 0;
-			berries = 0;
-			gameLost = false;
-			turnsToCold = 15;
-			inventory = new Array();
-			inventoryString = "";
-			dps = 5;
-			cold = false;
-			coldCounter = 0;
-			turnCounter = 0;
-			clearConditions();
 	}
 }
 
@@ -328,15 +309,27 @@ function Update () {
 	if(hunger <0){
 		hunger = 0;
 	}
+	
+}
+
+function energyCountDown(){
+	hunger -= 1;
+}
+
+function alertTextReset(){
+	alertText = "";	
 }
 
 function conditionCheck(){
 	if(turnCounter - coldCounter > (turnsToCold - 5) && conditionCheck("Cold") != true){
 		conditionList.Add("Cold");
+		removeCondition("Healthy");
 		updateConditions();
 	}
 	if(turnCounter - coldCounter > turnsToCold && conditionCheck("Freezing") != true){
 		conditionList.Add("Freezing");
+		removeCondition("Healthy");
+		removeCondition("Cold");
 		updateConditions();
 	}
 	if(hunger == 0 && conditionCheck("Starving") != true){
@@ -352,11 +345,14 @@ function conditionCheck(){
 		else if(health < 76 && health > 24 && conditionCheck("Fair Health") != true)
 		{
 			conditionList.Add("Fair Health");
+			removeCondition("Healthy");
 			updateConditions();
 		}
 		else if(health < 25 && conditionCheck("Injured") != true)
 		{
 			conditionList.Add("Injured");
+			removeCondition("Fair Health");
+			removeCondition("Healthy");
 			updateConditions();
 		}	
 	}	
@@ -387,7 +383,6 @@ function eatBerries(){
 	hunger +=5;
 	berries -=1;
 	alertText = "5 Hunger Gained";
-	alert = true;
 	}
 }
 
@@ -396,7 +391,6 @@ function eatRawMeat(){
 	hunger += 25;
 	health -= 15;
 	alertText = "15 Health Lost - 25 Hunger Gained";
-	alert = true;
 }
 
 function eatMeat(){
@@ -404,7 +398,6 @@ function eatMeat(){
 	hunger += 30;
 	health += 25;
 	alertText = "30 Hunger Gained - 25 Health Gained";
-	alert = true;
 }
 
 function eatHealingHerb(){
@@ -412,7 +405,6 @@ function eatHealingHerb(){
 	hunger +=10;
 	health +=10;
 	alertText = "10 Hunger Gained - 10 Health Gained";
-	alert = true;
 }
 
 	
@@ -484,7 +476,6 @@ function updateDPS(){
 }
 
 function alertEvent(text:String){
-	alert = true;
 	alertText = text;
 }
 

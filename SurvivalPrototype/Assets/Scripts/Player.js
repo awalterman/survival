@@ -73,6 +73,9 @@ function FixedUpdate () {
 	if (isMoving == true) {
 		addMovePingEffect();
 	}
+	if(isMoving == true){
+		playerSource.energyCountDown();
+	}
 }
 
 function Update(){

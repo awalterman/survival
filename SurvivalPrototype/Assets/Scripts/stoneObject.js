@@ -43,11 +43,14 @@ function OnMouseDown() {
 function gatherStone(){
 	if(playerSource.pickAxe>0){
 	playerSource.stone += 3;
+	playerSource.alertText = "3 Stone Collected";
 	}
 	else{
 	playerSource.stone +=1;
+	playerSource.alertText = "1 Stone Collected";
 	}
 	playerSource.hunger -= playerSource.hungerPerCollect;
+	playerSource.energyCountDown();
 }
 
 function destroyObject() {

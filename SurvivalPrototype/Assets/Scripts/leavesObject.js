@@ -41,8 +41,9 @@ function OnMouseDown() {
 	
 function gatherLeaves(){
 	playerSource.leaves += 1;
-	playerSource.hunger -= playerSource.hungerPerCollect;
-
+	playerSource.alertText = "1 Leaf Collected";
+	playerSource.alertTextReset();
+	playerSource.energyCountDown();
 }
 
 function destroyObject() {

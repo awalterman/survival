@@ -41,8 +41,9 @@ function OnMouseDown() {
 	
 function gatherBerries(){
 	playerSource.berries +=Random.Range(1,2);
-	playerSource.hunger -= playerSource.hungerPerCollect;
-
+	playerSource.alertText = "Berries Collected";
+	playerSource.alertTextReset();
+	playerSource.energyCountDown();
 }
 
 function destroyObject() {

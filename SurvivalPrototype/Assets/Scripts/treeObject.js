@@ -43,11 +43,15 @@ function OnMouseDown() {
 public function gatherWood(){
 	if(playerSource.axe>0){
 	playerSource.wood+= 3;
+	playerSource.alertText = "3 Wood Collected";
+	playerSource.alertTextReset();
 	}
 	else{
 	playerSource.wood += 1;
+	playerSource.alertText = "1 Wood Collected";
+	playerSource.alertTextReset();
 	}
-	playerSource.hunger -= playerSource.hungerPerCollect;
+	playerSource.energyCountDown();
 }
 
 function destroyObject() {
