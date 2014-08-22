@@ -1,13 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Player.js">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/animal.js">
     <Files>
-      <File FileName="Assets/Scripts/Player.js" Line="16" Column="1" />
-      <File FileName="Assets/Scripts/stoneObject.js" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/berriesObject.js" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/treeObject.js" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/rockObject.js" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/worldGeneration.js" Line="39" Column="5" />
+      <File FileName="Assets/Scripts/animal.js" Line="95" Column="39" />
+      <File FileName="Assets/Scripts/GameStart.js" Line="576" Column="1" />
+      <File FileName="Assets/Scripts/enemyGenerationScript.js" Line="14" Column="21" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
