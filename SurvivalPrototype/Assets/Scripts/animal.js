@@ -230,7 +230,9 @@ function canAttack () {
 }
 
 function OnMouseDown() {
-//	Debug.Log(playerSource.canAttack(this.transform.position));
+	if (isAnimalDead) {
+		return;
+	}
 	if(playerSource.canAttack(this.transform.position)){
 		player.GetComponent.<Player>().playerState= PlayerStatus.ATTACK;
 		reduceHP(playerSource.dps);
@@ -242,14 +244,12 @@ public function reduceHP (damage:float) {
 	hp -= damage;
 	Debug.Log(damage);
 	playAnimation(AnimationTypes.HURT);
-	// do hurt damage
 	if (hp <= 0) {
 		animalDidDie();
 	}
 }
 
 function animalDidDie () {
-	// update player that the animal has died
 	Debug.Log("enemy died");
 	isAnimalDead = true;
 	giveRewardToPlayer();
@@ -300,7 +300,6 @@ function playAnimation(animationType:AnimationTypes) {
 function playAnimationFromList (animations:String[]) {
 	var index = Random.Range(0, animations.Length);
 	var animationName = animations[index];
-	Debug.Log(animationName);
 	animation[animationName].wrapMode = WrapMode.Once;
 	animation.CrossFade(animationName);
 }
