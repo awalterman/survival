@@ -138,12 +138,10 @@ function Update(){
 }
 
 function OnCollisionEnter (col : Collision) {
-	// print("Ran into object: " + col.transform.name);
 	targetPosition = rigidbody.position;
 }
 
 function OnCollisionStay (col : Collision) {
-	Debug.Log("collision stay");
 	targetPosition = rigidbody.position;
 }
 
