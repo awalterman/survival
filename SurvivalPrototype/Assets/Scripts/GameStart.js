@@ -1,7 +1,7 @@
 ﻿#pragma strict
 
- var health = 100;
- var hunger = 100;
+ var health = 100.0;
+ var hunger = 100.0;
  var alert = true;
  var alertText = "";
  var timer = 0.0;
@@ -276,6 +276,7 @@ function OnGUI() {
 	//gameOver
 	else if (gameLost == true)
 	{
+		PlayerPrefs.SetInt("TimeLived",timer);
 		Application.LoadLevel("gameEnd");	
 	}
 	else if (gameWin == true){
