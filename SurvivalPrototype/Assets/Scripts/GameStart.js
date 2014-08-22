@@ -456,7 +456,7 @@ function craftItem(result:String,item:String, amount:int){
 				
 function craftCampfire(){
 	if(wood>10 && rock>5 ){
-		Instantiate(campfireObject, this.position, this.rotation);
+		Instantiate(campfireObject, transform.position, transform.rotation);
 		removeCondition("Cold");
 		removeCondition("Freezing");
 		wood -=20;
