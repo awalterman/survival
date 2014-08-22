@@ -277,7 +277,7 @@ function OnGUI() {
 	//gameOver
 	else if (gameLost == true)
 	{
-	  GUI.Label(Rect(100,100,500,500), "YOU LOSE \n What to do if you find yourself stuck in a crack in the ground underneath a giant boulder you can't move, with no hope of rescue. Consider how lucky you are that life has been good to you so far. Alternatively, if life hasn't been good to you so far, which given your current circumstances seems more likely, consider how lucky you are that it won't be troubling you much longer");
+		Application.LoadLevel("gameEnd");	
 	}
 	else if (gameWin == true){
 	  GUI.Label(Rect(100,100,500,500), "You Win - have a lolipop");	

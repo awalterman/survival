@@ -116,6 +116,7 @@ function canAttack () {
 
 function OnMouseDown() {
 	if(playerSource.canAttack(this.transform.position)){
+		player.GetComponent.<Player>().playerState= PlayerStatus.ATTACK;
 		reduceHP(playerSource.dps);
 	}
 }

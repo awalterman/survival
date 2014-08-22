@@ -22,12 +22,11 @@ public var attackAnimations : String[];
 public var collectingAnimations : String[];
 public var deadAnimations : String[];
 
-var playerState = PlayerStatus.IDLE;
+public var playerState = PlayerStatus.IDLE;
 var lastCollectTime : float;
 
 var cameraOffset : Vector3;
 private var playerSource: GameStart;
-
 
 function Start () {
 	cameraOffset = Camera.main.transform.position;
@@ -55,6 +54,7 @@ function FixedUpdate () {
 			targetPosition = hit.point;
 		}
 	}
+	
 	moveTowardsTargetPosition();
 	updateState();
 }
