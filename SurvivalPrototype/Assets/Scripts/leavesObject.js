@@ -1,23 +1,22 @@
-﻿#pragma strict
-
-private var playerSource: GameStart;
+﻿private var playerSource: GameStart;
 public var collectDistance : float;
 var life : int;
 var isDestroyed : int;
 
 function Start () {
 	playerSource = Camera.main.GetComponent("GameStart");
-	life = Random.Range(1,5);
+		life = Random.Range(1,3);
 }
 
 function Update () {
-	if (life <= 0) {
+	if(life <=0){
 		destroyObject();
 	}
 }
 
 function OnMouseDown() {
 	if (life <= 0) {
+		Debug.Log("Destroying leaf on mouse down.");
 		destroyObject();
 	}
 	var players : GameObject[];
@@ -29,22 +28,18 @@ function OnMouseDown() {
 	playerPosition = player.transform.position;
 	distance = Vector3.Distance(playerPosition, transform.position);
 	if (distance < collectDistance) {
-		Debug.Log("Collected stone.");
-		gatherStone();
+		Debug.Log("Collected leaves.");
+		gatherLeaves();
 		life --;
 	} else {
-		Debug.Log("Cannot collect stone.");
+		Debug.Log("Cannot collect leaves.");
 	}
 }
 	
-function gatherStone(){
-	if(playerSource.pickAxe>0){
-	playerSource.stone += 3;
-	}
-	else{
-	playerSource.stone +=1;
-	}
+function gatherLeaves(){
+	playerSource.leaves += 1;
 	playerSource.hunger -= playerSource.hungerPerCollect;
+
 }
 
 function destroyObject() {
