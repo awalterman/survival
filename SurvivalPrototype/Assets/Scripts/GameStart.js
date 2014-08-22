@@ -212,7 +212,7 @@ function OnGUI() {
 			if (GUI.Button(Rect(0,135,80,20),"Campfire"))
 				craftCampfire();
 			GUI.Label (Rect (85, 136, 100, 20),GUIContent("5",woodIcon));
-			GUI.Label (Rect (120, 136, 100, 20),GUIContent("5",leafIcon));
+			GUI.Label (Rect (120, 136, 100, 20),GUIContent("5",leafsIcon));
 			
 			if (GUI.Button(Rect(0,160,80,20),"Cook Meat"))
 				if(checkNearCampfire == true)
