@@ -16,7 +16,7 @@ public var rotationCutoff = 1;
 public var spacing = 0.5;
 public var targetPosition = Vector3(25, 0, 25);
 public var targetDirection = Vector3(0,0,0);
-public var collectPace : float = 300;
+public var collectPace : float = 500;
 public var idleAnimations : String[];
 public var walkAnimations : String[];
 public var runAnimations : String[];
@@ -40,31 +40,40 @@ function Start () {
 
 function FixedUpdate () {
 	var isMoving : boolean;
-	if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
-       targetPosition.z += spacing;
-       isMoving = true;
-    }
-    if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) { 
-      	targetPosition.z -= spacing;
-     	isMoving = true; 
-    }
-    if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
-       targetPosition.x -= spacing;
-       isMoving = true;
-    }
-    if (Input.GetKeyDown(KeyCode.D)|| Input.GetKeyDown(KeyCode.RightArrow)) {
-       targetPosition.x += spacing;
-       isMoving = true;
-    }
+	if (isCollecting()) {
+		targetPosition = rigidbody.position;
+	} else {
+		if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
+	       targetPosition.z += spacing;
+	       isMoving = true;
+	    }
+	    if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) { 
+	      	targetPosition.z -= spacing;
+	     	isMoving = true; 
+	    }
+	    if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
+	       targetPosition.x -= spacing;
+	       isMoving = true;
+	    }
+	    if (Input.GetKeyDown(KeyCode.D)|| Input.GetKeyDown(KeyCode.RightArrow)) {
+	       targetPosition.x += spacing;
+	       isMoving = true;
+	    }
+	}
 
 	moveTowardsTargetPosition();
 	updateState();
 	if (isMoving == true) {
 		addMovePingEffect();
 	}
+	if(Vector3.Distance(targetPosition, transform.position) > 0.05) {
+		playerSource.energyCountDown();
+	}
 }
 function FindMovingTarget() {
-	if (Input.GetMouseButtonUp (0) && !GameStart.didClickGui) {
+	if (Input.GetMouseButtonUp (0) &&
+			!GameStart.didClickGui &&
+			!isCollecting()) {
 		var hit: RaycastHit;
 		var ray: Ray;
 		ray = (Camera.main.ScreenPointToRay(Input.mousePosition));
@@ -119,14 +128,22 @@ function updateState() {
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
 	Debug.DrawLine(rigidbody.position, targetPosition);
 	var moveDistance = targetDirection.magnitude;
-	if (Time.time * 1000 - lastCollectTime < collectPace) {
+	if (isCollecting()) {
 		playerState = PlayerStatus.COLLECTING;
 	} else if (moveDistance > 0.5) {
-		playerState = PlayerStatus.WALK;
+		if (playerSource.conditionCheck("Freezing") || playerSource.conditionCheck("Cold")) {
+			playerState = PlayerStatus.WALK;
+		} else {
+			playerState = PlayerStatus.RUN;
+		}
 	} else {
 		playerState = PlayerStatus.IDLE;
 	}
 	playAnimationForState(playerState);
+}
+
+function isCollecting() {
+	return (Time.time * 1000 - lastCollectTime < collectPace);
 }
 
 public function hasCollected() {
@@ -162,11 +179,11 @@ function playAnimationForState(state:PlayerStatus) {
 function playAnimationFromList(animations:String[]) {
 	var index = Random.Range(0, animations.Length);
 	var animationName = animations[index];
+	Debug.Log("Player animation named " + animationName);
 	animation.CrossFade(animationName);
 }
 
 function addMovePingEffect() {
-	Debug.Log("Move ping");
 	var particleObject : GameObject;
 	particleObject = GameObject.Instantiate(walkPingEffect, Vector3(targetPosition.x, 1, targetPosition.z), Quaternion.Euler(90,0,0));
 	particleObject.particleSystem.Play();

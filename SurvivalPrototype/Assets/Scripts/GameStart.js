@@ -2,7 +2,7 @@
 
  var health = 100;
  var hunger = 100;
- var alert = false;
+ var alert = true;
  var alertText = "";
  var timer = 0.0;
 
@@ -109,6 +109,8 @@ function Start () {
 x= Screen.width;
 y= Screen.height;
 player = GameObject.Find("Player").GetComponent.<Player>();
+
+InvokeRepeating("energyCountDown", 1, 2);
 } 
 
 function OnGUI() {
@@ -126,7 +128,7 @@ function OnGUI() {
 		//energy
 		GUI.Label(Rect(x-180,32,100,30),GUIContent("Energy",energyIcon));
 		GUI.Box(Rect(x-110,35,100,20),"");
-		GUI.DrawTexture(Rect(x-110,38,health,12),energyFill,ScaleMode.StretchToFill,true,10.0f);
+		GUI.DrawTexture(Rect(x-110,38,hunger,12),energyFill,ScaleMode.StretchToFill,true,10.0f);
 				
 		//condition box
 		GUI.Box(Rect(x-110, 60, 100, 70), "Condition:" + conditionString);
@@ -221,7 +223,7 @@ function OnGUI() {
 			GUI.Label (Rect (120, 161, 100, 20),GUIContent("1",meatIcon));
 			
 			if (GUI.Button(Rect(0,185,80,20),"Cloth Rags"))
-				craftItem("clothRags", "hides",10,"leaves",20);
+				craftItem("clothRags", "hide",10,"leaves",20);
 			GUI.Label (Rect (85, 186, 100, 20),GUIContent("10",hidesIcon));
 			GUI.Label (Rect (120, 186, 100, 20),GUIContent("20",leavesIcon));
 			
@@ -235,7 +237,7 @@ function OnGUI() {
 			GUI.Label (Rect (120, 236, 100, 20),GUIContent("3",rockIcon));
 			
 			if (GUI.Button(Rect(0,260,80,20),"Leather"))
-				craftItem("leather","hides",2, "sharpenedStone", 1);
+				craftItem("leather","hide",2, "sharpenedStone", 1);
 			GUI.Label (Rect (85, 261, 100, 20),GUIContent("2",hidesIcon));
 			GUI.Label (Rect (120, 261, 100, 20),GUIContent("3",sharpenedStoneIcon));
 			
@@ -253,6 +255,7 @@ function OnGUI() {
 			GUI.Label (Rect (85, 336, 100, 20),GUIContent("3",woodShaftIcon));
 			GUI.Label (Rect (120, 336, 100, 20),GUIContent("5",sharpenedStoneIcon));
 			GUI.EndScrollView();
+			GUI.Label(Rect (300, 20, 300, 200),alertText);
 
 		//consumables
 		if(berries>0){
@@ -270,10 +273,6 @@ function OnGUI() {
 		if(healingHerb>0){
 			if (GUI.Button(Rect(380,y-40,30,30),healingHerbIcon))
 				eatHealingHerb();
-		}
-
-		if(alert){
-			GUI.Label(Rect (300, 20, 100, 50),alertText);
 		}
 	
 	}
@@ -295,27 +294,6 @@ function OnGUI() {
 	}
 	player.FindMovingTarget();
 	GUI.color = Color(1,1,1,1);
-	
-	//reset game
-	if (GUI.Button(Rect(830,360,50,30),"Reset")){
-			health = 100;
-			hunger = 100;
-			wood = 0;
-			rock = 0;
-			stone = 0;
-			meat = 0;
-			hide = 0;
-			berries = 0;
-			gameLost = false;
-			turnsToCold = 15;
-			inventory = new Array();
-			inventoryString = "";
-			dps = 5;
-			cold = false;
-			coldCounter = 0;
-			turnCounter = 0;
-			clearConditions();
-	}
 }
 
 
@@ -341,15 +319,27 @@ function Update () {
 	if(hunger <0){
 		hunger = 0;
 	}
+	
+}
+
+function energyCountDown(){
+	hunger -= 1;
+}
+
+function alertTextReset(){
+	alertText = "";	
 }
 
 function conditionCheck(){
 	if(turnCounter - coldCounter > (turnsToCold - 5) && conditionCheck("Cold") != true){
 		conditionList.Add("Cold");
+		removeCondition("Healthy");
 		updateConditions();
 	}
 	if(turnCounter - coldCounter > turnsToCold && conditionCheck("Freezing") != true){
 		conditionList.Add("Freezing");
+		removeCondition("Healthy");
+		removeCondition("Cold");
 		updateConditions();
 	}
 	if(hunger == 0 && conditionCheck("Starving") != true){
@@ -365,33 +355,18 @@ function conditionCheck(){
 		else if(health < 76 && health > 24 && conditionCheck("Fair Health") != true)
 		{
 			conditionList.Add("Fair Health");
+			removeCondition("Healthy");
 			updateConditions();
 		}
 		else if(health < 25 && conditionCheck("Injured") != true)
 		{
 			conditionList.Add("Injured");
+			removeCondition("Fair Health");
+			removeCondition("Healthy");
 			updateConditions();
 		}	
 	}	
 }
-
-function barUpdate()
-{
-	if(hunger != 0){
-		alert = false;
-		alertText = "";
-	}
-	else{
-		health --;
-		clearConditions();
-	}
-	if(conditionCheck("Freezing")){
-		health --;	
-		clearConditions();
-	}
-}
-
-
 
 
 
@@ -400,7 +375,6 @@ function eatBerries(){
 	hunger +=5;
 	berries -=1;
 	alertText = "5 Hunger Gained";
-	alert = true;
 	}
 }
 
@@ -409,7 +383,6 @@ function eatRawMeat(){
 	hunger += 25;
 	health -= 15;
 	alertText = "15 Health Lost - 25 Hunger Gained";
-	alert = true;
 }
 
 function eatMeat(){
@@ -417,7 +390,6 @@ function eatMeat(){
 	hunger += 30;
 	health += 25;
 	alertText = "30 Hunger Gained - 25 Health Gained";
-	alert = true;
 }
 
 function eatHealingHerb(){
@@ -425,7 +397,6 @@ function eatHealingHerb(){
 	hunger +=10;
 	health +=10;
 	alertText = "10 Hunger Gained - 10 Health Gained";
-	alert = true;
 }
 
 	
@@ -497,7 +468,6 @@ function updateDPS(){
 }
 
 function alertEvent(text:String){
-	alert = true;
 	alertText = text;
 }
 

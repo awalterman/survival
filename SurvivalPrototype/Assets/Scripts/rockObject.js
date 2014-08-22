@@ -40,7 +40,8 @@ function OnMouseDown() {
 	
 function gatherRock(){
 	playerSource.rock +=1;
-	playerSource.hunger -= playerSource.hungerPerCollect;
+	playerSource.alertText = "1 Rock Collected";
+	playerSource.energyCountDown();
 }
 
 function destroyObject() {
