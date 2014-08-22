@@ -9,12 +9,12 @@ var cameraOffset : Vector3;
 
 function Start () {
 	cameraOffset = Camera.main.transform.position;
-	transform.position = targetPosition;
-   	Camera.main.transform.position = transform.position + cameraOffset;
-	oldPosition = transform.position;
+	rigidbody.position = targetPosition;
+   	Camera.main.transform.position = rigidbody.position + cameraOffset;
+	oldPosition = rigidbody.position;
 }
 
-function Update () {
+function FixedUpdate () {
 	if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
        targetPosition.z += spacing;
     if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
@@ -32,12 +32,13 @@ function Update () {
 			targetPosition = hit.point;
 		}
 	}
-	moveTowardsTargetPosition(targetPosition);
+	moveTowardsTargetPosition();
 }
 
 function OnCollisionEnter (col : Collision) {
 	print("Ran into object: " + col.transform.name);
-	moveTowardsTargetPosition(rigidbody.position);
+	targetPosition = rigidbody.position;
+	moveTowardsTargetPosition();
 }
 
 function OnCollisionStay (col : Collision) {
@@ -48,15 +49,17 @@ function OnCollisionExit(collisionInfo : Collision) {
 	print("No longer in contact with " + collisionInfo.transform.name);
 }
 
-function moveTowardsTargetPosition(targetPosition : Vector3) {
+function moveTowardsTargetPosition() {
 	targetPosition = Vector3(targetPosition.x, 0, targetPosition.z);
-	targetDirection = targetPosition - transform.position;
-	Debug.DrawLine(transform.position, targetPosition);
+	targetDirection = targetPosition - rigidbody.position;
+	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
+	Debug.DrawLine(rigidbody.position, targetPosition);
 	distance = targetDirection.magnitude;
+	print("Moving " + distance);
 	if (distance > rotationCutoff) {
 		var newDir = Vector3.RotateTowards(transform.forward, targetDirection, rotationSpeed * Time.deltaTime, 0);
 		rigidbody.rotation = Quaternion.LookRotation(newDir);
 	}
-	rigidbody.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-    Camera.main.transform.position = transform.position + cameraOffset;
+	rigidbody.position = Vector3.MoveTowards(rigidbody.position, targetPosition, speed * Time.deltaTime);
+    Camera.main.transform.position = rigidbody.position + cameraOffset;
 }
