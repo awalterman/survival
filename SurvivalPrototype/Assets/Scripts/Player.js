@@ -11,7 +11,6 @@ function Start () {
 	cameraOffset = Camera.main.transform.position;
 	rigidbody.position = targetPosition;
    	Camera.main.transform.position = rigidbody.position + cameraOffset;
-	oldPosition = rigidbody.position;
 }
 
 function FixedUpdate () {
@@ -55,7 +54,6 @@ function moveTowardsTargetPosition() {
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
 	Debug.DrawLine(rigidbody.position, targetPosition);
 	distance = targetDirection.magnitude;
-	print("Moving " + distance);
 	if (distance > rotationCutoff) {
 		var newDir = Vector3.RotateTowards(transform.forward, targetDirection, rotationSpeed * Time.deltaTime, 0);
 		rigidbody.rotation = Quaternion.LookRotation(newDir);
