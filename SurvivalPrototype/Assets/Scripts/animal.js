@@ -171,13 +171,12 @@ function isInLineOfSight () {
 	}
 	var hit : RaycastHit;
 	var rayDirection = player.transform.position - transform.position;
-	if (Physics.Raycast(transform.position, rayDirection, hit)) {
-//		Debug.Log(hit.collider.gameObject.name);
+	if (Physics.Raycast(transform.position + Vector3.up, rayDirection, hit)) {
 	 	if (hit.transform == player.transform) {
 	 		return isFacingPlayer();
 	 	}
 	}
-	return isFacingPlayer();
+	return false;
 }
 
 function isFacingPlayer () {
