@@ -34,6 +34,10 @@ var movementEnergyCounter : float = 0;
 
 var cameraOffset : Vector3;
 private var playerSource: GameStart;
+private var currentAnimation : PlayerStatus;
+
+private var didMoveLastFrame : int;
+private var lastTargetPosition : Vector3;
 
 function Start () {
 	cameraOffset = Camera.main.transform.position;
@@ -126,12 +130,15 @@ function OnCollisionEnter (col : Collision) {
 }
 
 function OnCollisionStay (col : Collision) {
+	Debug.Log("collision stay");
+	targetPosition = rigidbody.position;
 }
 
 function OnCollisionExit(collisionInfo : Collision) {
 }
 
 function moveTowardsTargetPosition() {
+	var oldPos = rigidbody.position;
 	targetPosition = Vector3(targetPosition.x, 0, targetPosition.z);
 	targetDirection = targetPosition - rigidbody.position;
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
@@ -143,6 +150,7 @@ function moveTowardsTargetPosition() {
 	}
 	rigidbody.position = Vector3.MoveTowards(rigidbody.position, targetPosition, speed * Time.deltaTime);
     Camera.main.transform.position = rigidbody.position + cameraOffset;
+    var newPos = rigidbody.position;
 }
 
 function updateState() {
@@ -174,6 +182,10 @@ public function hasCollected() {
 }
 
 function playAnimationForState(state:PlayerStatus) {
+	if (animation.isPlaying && currentAnimation >= state) {
+		return;
+	}
+	currentAnimation = state;
 	switch(state) {
 		case PlayerStatus.IDLE:
 			playAnimationFromList(idleAnimations);
@@ -202,6 +214,7 @@ function playAnimationForState(state:PlayerStatus) {
 function playAnimationFromList(animations:String[]) {
 	var index = Random.Range(0, animations.Length);
 	var animationName = animations[index];
+	animation[animationName].wrapMode = WrapMode.Once;
 	animation.CrossFade(animationName);
 }
 
