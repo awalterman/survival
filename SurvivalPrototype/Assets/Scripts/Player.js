@@ -40,7 +40,6 @@ function Start () {
 
 function FixedUpdate () {
 	var isMoving : boolean;
-	isMoving = false;
 	if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
        targetPosition.z += spacing;
        isMoving = true;
@@ -57,21 +56,22 @@ function FixedUpdate () {
        targetPosition.x += spacing;
        isMoving = true;
     }
-       
-    if (Input.GetMouseButtonDown (0)) {
+
+	moveTowardsTargetPosition();
+	updateState();
+	if (isMoving == true) {
+		addMovePingEffect();
+	}
+}
+function FindMovingTarget() {
+	if (Input.GetMouseButtonUp (0) && !GameStart.didClickGui) {
 		var hit: RaycastHit;
 		var ray: Ray;
 		ray = (Camera.main.ScreenPointToRay(Input.mousePosition));
 		if(Physics.Raycast(ray, hit)) {
 			targetPosition = hit.point;
-			isMoving = true;
+			addMovePingEffect();
 		}
-	}
-	
-	moveTowardsTargetPosition();
-	updateState();
-	if (isMoving == true) {
-		addMovePingEffect();
 	}
 }
 
