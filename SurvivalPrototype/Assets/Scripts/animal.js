@@ -14,6 +14,7 @@ public var maxChaseDistance : float = 30;
 public var maxRoamDistance : float = 5; // For not dangerous creatures, this is max flee radius
 public var animalFreeWaitTimeLoop : int = 50;
 public var animalFreeRoamTimeLoop : int = 500;
+public var animalRestTimeLoop : int = 500;
 public var fleeTimeLoop : int = 2000;
 public var minMeatReward : int = 10;
 public var maxMeatReward : int = 50;
@@ -39,6 +40,7 @@ private var initialPosition : Vector3;
 private var waitingLoop : int;
 private var runningLoop : int;
 private var fleeingLoop : int;
+private var restingLoop : int;
 private var isAnimalDead : boolean;
 private var currentAnimation : AnimationTypes;
 
@@ -59,6 +61,7 @@ function Start () {
 	playerSource = Camera.main.GetComponent("GameStart");
 	waitingLoop = animalFreeWaitTimeLoop;
 	runningLoop = animalFreeRoamTimeLoop;
+	restingLoop = 0;
 	isAnimalDead = false;
 }
 
@@ -68,11 +71,15 @@ function Update () {
 	}
 	if (isInPlayerRange() && isInLineOfSight()) {
 		if (isDangerous) {
-			isAttacking = true;
-			if (isInAttackRange()) {
-				tryToAttack();
+			if (hp <= 20) {
+				tryToFlee();
 			} else {
-				moveTowardsPlayer();
+				isAttacking = true;
+				if (isInAttackRange()) {
+					tryToAttack();
+				} else {
+					moveTowardsPlayer();
+				}
 			}
 		} else {
 			tryToFlee();
@@ -82,7 +89,12 @@ function Update () {
 			isAttacking = true;
 			tryToAttack();
 		} else {
-			tryToFlee();
+			if(restingLoop < animalRestTimeLoop) {
+				restingLoop++;
+				playAnimation(AnimationTypes.IDLE);
+			} else {
+				tryToFlee();
+			}
 		}
 	} else {
 		isAttacking = false;
@@ -91,16 +103,12 @@ function Update () {
 	}
 }
 
-function updatePositionOnCollision () {
-	
-}
-
-
 function tryToFlee () {
 	isFleeing = true;
 	if (fleeingLoop == 0) {
 		fleeingLoop = fleeTimeLoop;
 	}
+
 	if(Random.Range(0,9) > 7) {
 		transform.Rotate(0, runSpeed * 5 * Time.deltaTime, 0);
 	} else {
@@ -114,11 +122,22 @@ function tryToFlee () {
 		var newPossiblePosition = Vector3.MoveTowards(transform.position, transform.position + distanceToMove, runSpeed);
 		playAnimation(AnimationTypes.RUN);
 		transform.position = newPossiblePosition;
+		tryToRotateIfGoingToHit();
 	}
 	fleeingLoop--;
 	if (fleeingLoop <= 0 || !isInPlayerRange()) {
 		fleeingLoop = 0;
 		isFleeing = false;
+	}
+	restingLoop = animalRestTimeLoop * (fleeingLoop / fleeTimeLoop);
+}
+
+function tryToRotateIfGoingToHit () {
+	var hit : RaycastHit;
+	if (Physics.Raycast(transform.position + Vector3.up, transform.forward, hit)) {
+		if (Vector3.Distance(hit.collider.transform.position, transform.position) <= 20) {
+			transform.Rotate(0, Random.Range(10,90) * walkSpeed * Time.deltaTime, 0);
+		}
 	}
 }
 
@@ -135,7 +154,6 @@ function OnCollisionEnter (col : Collision) {
 function OnCollisionStay (col : Collision) {
 	rotateToInitialPoint();
 }
-
 
 function roamAroundLazy () {
 	if (!isAnimalInsideBoundaryRadius(transform.position, maxRoamDistance)) {
@@ -165,6 +183,7 @@ function roamAroundLazy () {
 			playAnimation(AnimationTypes.WALK);
 			if (isAnimalInsideBoundaryRadius(newPossiblePosition, maxRoamDistance)) {
 				transform.position = newPossiblePosition;
+				tryToRotateIfGoingToHit();
 			} else {
 				rotateToInitialPoint();
 			}
@@ -237,6 +256,7 @@ function tryToAttack () {
 		playerComponent = player.GetComponent(Player);
 		playerComponent.wasAttacked();
 	} else {
+		
 	}
 }
 

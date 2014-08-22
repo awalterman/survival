@@ -395,7 +395,7 @@ function eatBerries(){
  if(berries>0){
 	hunger +=5;
 	berries -=1;
-	alertText = "5 Hunger Gained";
+	alertText = "5 Energy Gained";
 	}
 }
 
@@ -403,21 +403,21 @@ function eatRawMeat(){
 	meat --;
 	hunger += 25;
 	health -= 15;
-	alertText = "15 Health Lost - 25 Hunger Gained";
+	alertText = "15 Health Lost - 25 Energy Gained";
 }
 
 function eatMeat(){
 	cookedMeat --;
 	hunger += 30;
 	health += 25;
-	alertText = "30 Hunger Gained - 25 Health Gained";
+	alertText = "30 Energy Gained - 25 Health Gained";
 }
 
 function eatHealingHerb(){
 	healingHerb --;
 	hunger +=10;
 	health +=10;
-	alertText = "10 Hunger Gained - 10 Health Gained";
+	alertText = "10 Energy Gained - 10 Health Gained";
 }
 
 	
@@ -432,7 +432,7 @@ function craftItem(result:String,item:String, amount:int, item2:String, amount2:
 		rField.SetValue(this, rslt + 1)	;
 		iField.SetValue(this, itm - amount);
 		i2Field.SetValue(this, itm2 - amount2);
-		alertEvent(result.GetType().Name + " Crafted");
+		alertText = (rField + " Crafted");
 	}
 	else{
 		alertText = "Not Enough Resource";
