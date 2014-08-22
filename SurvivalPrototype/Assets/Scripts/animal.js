@@ -132,6 +132,11 @@ function OnCollisionEnter (col : Collision) {
 	rotateToInitialPoint();
 }
 
+function OnCollisionStay (col : Collision) {
+	rotateToInitialPoint();
+}
+
+
 function roamAroundLazy () {
 	if (!isAnimalInsideBoundaryRadius(transform.position, maxRoamDistance)) {
 		rotateToInitialPoint();
