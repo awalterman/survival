@@ -206,6 +206,9 @@ private function PermuteMap() {
 			openSet.Remove(fst);
 		}
 	}
-	player.transform.position = center.tile.transform.position;
-	player.transform.Translate(0, -player.transform.position.y, 0);
+	
+	if (player) {
+		player.transform.position = center.tile.transform.position;
+		player.transform.Translate(0, -player.transform.position.y, 0);
+	}
 }

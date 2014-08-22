@@ -8,26 +8,27 @@ public var attackRange : float = 1;
 public var walkSpeed : float = 1;
 public var runSpeed : float = 2;
 public var attackPace : float = 100;
+public var viewAngle : float = 35;
 
-//var animator : Animator;
 var player : GameObject;
 var lastAttackTime : float;
-
-// Animation states
-//var dieStateHash : int = Animator.StringToHash("dead");
+var isAttacking : boolean;
 
 function Start () {
-//	animator = GetComponent.<Animator>();
 	player = GameObject.FindGameObjectWithTag("Player");
+	isAttacking = false;
 }
 
 function Update () {
-	if (isInPlayerRange() && isDangerous) {
+	if (isInPlayerRange() && isDangerous && isInLineOfSight()) {
+		isAttacking = true;
 		if (isInAttackRange()) {
 			tryToAttack();
 		} else {
 			moveTowardsPlayer();
 		}
+	} else if (isInAttackRange()){
+		tryToAttack();
 	} else {
 		
 	}
@@ -35,6 +36,28 @@ function Update () {
 
 function isInPlayerRange () {
 	return (distanceFromPlayer() <= targetRange);
+}
+
+function isInLineOfSight () {
+	if (isAttacking) {
+		return true;
+	}
+	var hit : RaycastHit;
+	var rayDirection = player.transform.position - transform.position;
+	
+	if (Physics.Raycast(transform.position, rayDirection, hit)) {
+	
+	 	if (hit.transform == player.transform) {
+	 		var angle = Vector3.Angle(transform.forward, rayDirection);
+	 		
+			Debug.Log(angle);
+			if (angle < viewAngle)
+			{
+				return true;
+			}
+	 	}
+	}
+	return false;
 }
 
 function isInAttackRange () {

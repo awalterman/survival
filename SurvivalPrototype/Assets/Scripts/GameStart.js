@@ -124,12 +124,12 @@ function OnGUI() {
 		GUI.Box(Rect(x-110,10,100,20),"");
 		GUI.skin.box.stretchWidth = true;
 		GUI.skin.box.stretchHeight = true;
-		GUI.DrawTexture(Rect(x-110,13,health,12),healthFill,ScaleMode.StretchToFill,true,10.0f);
+//		GUI.DrawTexture(Rect(x-110,13,health,12),healthFill,ScaleMode.StretchToFill,true,10.0f);
 		
 		//energy
 		GUI.Label(Rect(x-180,32,100,30),GUIContent("Energy",energyIcon));
 		GUI.Box(Rect(x-110,35,100,20),"");
-		GUI.DrawTexture(Rect(x-110,38,health,12),energyFill,ScaleMode.StretchToFill,true,10.0f);
+//		GUI.DrawTexture(Rect(x-110,38,health,12),energyFill,ScaleMode.StretchToFill,true,10.0f);
 				
 		//condition box
 		GUI.Box(Rect(x-110, 60, 100, 70), "Condition:" + conditionString);
