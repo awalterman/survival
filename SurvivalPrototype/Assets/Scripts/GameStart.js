@@ -35,9 +35,22 @@ var berries=0;
  var rock = 0;
  var meat = 0;
  var hide = 0;
+ var leaves = 0;
  var dps = 5;
  var enemyName = "";
  var enemyHealth = 0;
+ var woodShaft = 0;
+ var sharpenedStone = 0;
+ var leather = 0;
+ var healingHerb = 0;
+ var cookedMeat = 0;
+ var clothRags = 0;
+ var armor = 0;
+ var axe = 0;
+ var pickAxe = 0;
+ var stoneAxe = 0;
+ var knife = 0;
+ var spear = 0;
 
 //items
  var hasAxe = false;
@@ -82,6 +95,19 @@ public var healthIcon: Texture2D;
 public var energyIcon: Texture2D;
 public var healthFill: Texture2D;
 public var energyFill: Texture2D;
+public var leavesIcon: Texture2D;
+public var woodShaftIcon: Texture2D;
+public var sharpenedStoneIcon: Texture2D;
+public var leatherIcon: Texture2D;
+public var healingHerbIcon:Texture2D;
+public var cookedMeatIcon: Texture2D;
+public var clothRagIcon: Texture2D;
+public var armorIcon:Texture2D;
+public var axeIcon:Texture2D;
+public var pickAxeIcon: Texture2D;
+public var stoneAxeIcon: Texture2D;
+public var knifeIcon: Texture2D;
+public var spearIcon: Texture2D;
 
 function Start () {
 x= Screen.width;
@@ -117,7 +143,7 @@ function OnGUI() {
 			ix = Mathf.Lerp(10,-150,1);
 		}
 		// Begin the ScrollView
-    	scrollViewVector = GUI.BeginScrollView (Rect(ix, 80, 100, 250), scrollViewVector, Rect (0, 80, 80, 400));
+    	scrollViewVector = GUI.BeginScrollView (Rect(ix, 80, 100, 250), scrollViewVector, Rect (0, 80, 80, 600));
  		GUI.Label(Rect (0, 80, 30, 30), woodIcon);
  		GUI.Label(Rect (30, 80, 80, 20),""+ wood);
  		GUI.Label(Rect (0, 110, 30, 30),stoneIcon);
@@ -130,11 +156,30 @@ function OnGUI() {
 		GUI.Label(Rect (30, 200, 80, 20),""+meat);
 		GUI.Label(Rect (0, 230, 30, 30),hidesIcon);
 		GUI.Label(Rect (30, 230, 80, 20),""+hide);
-		GUI.Box(Rect (0, 260, 80, 20),"DPS: "+ dps);
-		GUI.Box(Rect (0, 290, 80, 20),"DPS: "+ dps);
-		GUI.Box(Rect (0, 320, 80, 20),"DPS: "+ dps);
-		GUI.Box(Rect (0, 350, 80, 20),"DPS: "+ dps);
-		GUI.Box(Rect (0, 380, 80, 20),"DPS: "+ dps);
+		GUI.Label(Rect (0, 260, 30, 30),leavesIcon);
+		GUI.Label(Rect (30, 260, 80, 20),""+leaves);
+		
+		GUI.Label(Rect (0, 290, 30, 30),woodShaftIcon);
+		GUI.Label(Rect (30, 290, 80, 20),""+woodShaft);
+		GUI.Label(Rect (0, 320, 30, 30),sharpenedStoneIcon);
+		GUI.Label(Rect (30, 320, 80, 20),""+sharpenedStone);
+		GUI.Label(Rect (0, 350, 30, 30),leatherIcon);
+		GUI.Label(Rect (30, 350, 80, 20),""+leather);
+		GUI.Label(Rect (0, 380, 30, 30),healingHerbIcon);
+		GUI.Label(Rect (30, 380, 80, 20),""+healingHerb);
+		GUI.Label(Rect (0, 410, 30, 30),cookedMeatIcon);
+		GUI.Label(Rect (30, 410, 80, 20),""+cookedMeat);
+		GUI.Label(Rect (0, 440, 30, 30),axeIcon);
+		GUI.Label(Rect (30, 440, 80, 20),""+axe);
+		GUI.Label(Rect (0, 470, 30, 30),pickAxeIcon);
+		GUI.Label(Rect (30, 470, 80, 20),""+pickAxe);
+		GUI.Label(Rect (0, 500, 30, 30),stoneAxeIcon);
+		GUI.Label(Rect (30, 500, 80, 20),""+stoneAxe);
+		GUI.Label(Rect (0, 530, 30, 30),knifeIcon);
+		GUI.Label(Rect (30, 530, 80, 20),""+knife);
+		GUI.Label(Rect (0, 560, 30, 30),spearIcon);
+		GUI.Label(Rect (30, 560, 80, 20),""+spear);
+		
    		// End the ScrollView
    	 	GUI.EndScrollView();
 
@@ -351,28 +396,8 @@ function catchRabbit(){
 		tip = "Try crafting a \n weapon to catch \n zrabbits better";
 		hunger -= hungerPerCollect;
 	}
-	if(isEnemy == true){
-	enemyDamage();
-	}
 }
 
-function catchDeer(){
-	deerTry = true;
-	if(hasSpear){
-		meat += 20;
-		hide +=5;
-		removeItem("Spear");
-		hunger -= hungerPerCollect;
-		alertEvent("Deer Caught!");
-	}
-	else{
-		tip = "Try crafting a \n spear to kill \n deer";
-		hunger -= hungerPerCollect;
-	}
-	if(isEnemy == true){
-	enemyDamage();
-	}
-}
 	
 		
 				
@@ -509,82 +534,8 @@ function itemCheck(item: String)
 	return false;
 }
 
-function enemyDamage(){
-	if(enemyName == "Bear")
-	{
-		health -= bearDPS;
-		clearConditions();
-		hunger -= hungerPerAttack;
-		alertEvent(bearDPS + " Health Lost");
-	}
-	else{
-		health -= wolfDPS;
-		clearConditions();
-		hunger -= hungerPerAttack;
-		alertEvent(wolfDPS + " Health Lost");
-	}
-}
 
-function attackEnemy(){
-	if(enemyName == "Bear")
-	{
-		enemyHealth -= dps;
-		health -= bearDPS;
-		clearConditions();
-		alertEvent(bearDPS + " Health Lost");
-		hunger -= hungerPerAttack;
-	}
-	else{
-		enemyHealth -= dps;
-		health -= wolfDPS;
-		clearConditions();
-		alertEvent(wolfDPS + " Health Lost");
-		hunger -= hungerPerAttack;
-	}
-	
-	if(enemyHealth <=0){
-		isEnemy = false;
-		if(enemyName == "Bear")
-		{
-			gameWin = true;
-		}
-		else{
-			meat += Random.Range(3,12);
-			hide += Random.Range(3,12);
-		}
-	}
-}
-function escape(){
-	if(enemyName == "Bear")
-	{
-		if(Random.value < chanceToEscapeBear){
-			isEnemy = false;
-			spawnWorld();
-			hunger -= hungerPerRun;
-		}
-		else{
-			health -= bearDPS;
-			clearConditions();
-			alertText = bearDPS + " Health Lost";
-			alert = true;
-			hunger -= hungerPerRun;
-		}
-	}
-	else{
-		if(Random.value < chanceToEscapeWolf){
-			isEnemy = false;
-			spawnWorld();
-			hunger -= hungerPerRun;
-		}
-		else{
-			health -= wolfDPS;
-			clearConditions();
-			alertText = wolfDPS + " Health Lost";
-			alert = true;
-			hunger -= hungerPerRun;
-		}
-	}
-}
+
 
 function alertEvent(text:String){
 	alert = true;
