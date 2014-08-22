@@ -11,9 +11,10 @@ public var attackPace : float = 100;
 public var viewAngle : float = 35;
 public var difficultyLevel : int = 1;
 public var maxChaseDistance : float = 30;
-public var maxRoamDistance : float = 5;
+public var maxRoamDistance : float = 5; // For not dangerous creatures, this is max flee radius
 public var animalFreeWaitTimeLoop : int = 50;
 public var animalFreeRoamTimeLoop : int = 500;
+public var fleeTimeLoop : int = 2000;
 
 public var idleAnimations : String[];
 public var attackAnimation : String[];
@@ -27,10 +28,12 @@ private var playerSource: GameStart;
 var player : GameObject;
 var lastAttackTime : float;
 var isAttacking : boolean;
+var isFleeing : boolean;
 
 private var initialPosition : Vector3;
 private var waitingLoop : int;
 private var runningLoop : int;
+private var fleeingLoop : int;
 private var currentAnimation : AnimationTypes;
 
 enum AnimationTypes {
@@ -52,19 +55,54 @@ function Start () {
 }
 
 function Update () {
-	if (isInPlayerRange() && isDangerous && isInLineOfSight()) {
-		isAttacking = true;
-		if (isInAttackRange()) {
-			tryToAttack();
+	if (isInPlayerRange() && isInLineOfSight()) {
+		if (isDangerous) {
+			isAttacking = true;
+			if (isInAttackRange()) {
+				tryToAttack();
+			} else {
+				moveTowardsPlayer();
+			}
 		} else {
-			moveTowardsPlayer();
+			tryToFlee();
 		}
 	} else if (isInAttackRange()){
-		isAttacking = true;
-		tryToAttack();
+		if (isDangerous) {
+			isAttacking = true;
+			tryToAttack();
+		} else {
+			tryToFlee();
+		}
 	} else {
 		isAttacking = false;
+		isFleeing = false;
 		roamAroundLazy();
+	}
+}
+
+function tryToFlee () {
+	isFleeing = true;
+	if (fleeingLoop == 0) {
+		fleeingLoop = fleeTimeLoop;
+	}
+	if(Random.Range(0,9) > 7) {
+		transform.Rotate(0, runSpeed * 5 * Time.deltaTime, 0);
+	} else {
+		var rayDirection = player.transform.position - transform.position;
+		var angle = Vector3.Angle(transform.forward, rayDirection);
+		if (Mathf.Abs(angle) < 90) {
+			var	lookRotation = Quaternion.LookRotation(player.transform.forward);
+			transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * runSpeed * 5);
+		}
+		var distanceToMove = transform.forward * runSpeed * Time.deltaTime;
+		var newPossiblePosition = Vector3.MoveTowards(transform.position, transform.position + distanceToMove, runSpeed);
+		playAnimation(AnimationTypes.RUN);
+		transform.position = newPossiblePosition;
+	}
+	fleeingLoop--;
+	if (fleeingLoop <= 0 || !isInPlayerRange()) {
+		fleeingLoop = 0;
+		isFleeing = false;
 	}
 }
 
@@ -128,19 +166,18 @@ function isInPlayerRange () {
 }
 
 function isInLineOfSight () {
-	if (isAttacking) {
+	if (isAttacking || isFleeing) {
 		return true;
 	}
 	var hit : RaycastHit;
 	var rayDirection = player.transform.position - transform.position;
-	
 	if (Physics.Raycast(transform.position, rayDirection, hit)) {
-	
+//		Debug.Log(hit.collider.gameObject.name);
 	 	if (hit.transform == player.transform) {
 	 		return isFacingPlayer();
 	 	}
 	}
-	return false;
+	return isFacingPlayer();
 }
 
 function isFacingPlayer () {

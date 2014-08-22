@@ -22,5 +22,5 @@ function generateAnimal () {
 	var curZ = lastZ + Random.Range(-50, 50);
 	var animal;
 	var prefab = possibleAnimals[index];
-	animal = Instantiate(prefab, Vector3(curX, 0, curZ), Quaternion.Euler(0,0,0));	
+	animal = Instantiate(prefab, Vector3(lastX, 0, lastZ), Quaternion.Euler(0,0,0));	
 }
