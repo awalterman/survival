@@ -29,7 +29,7 @@
 //resources
  var wood=0;
  var stone=0;
-var berries=0;
+	var berries=0;
  var inventory = new Array ();
  var inventoryString = "";
  var tip = "";
@@ -215,7 +215,8 @@ function OnGUI() {
 			GUI.Label (Rect (120, 136, 100, 20),GUIContent("5",rockIcon));
 			
 			if (GUI.Button(Rect(0,160,80,20),"Cook Meat"))
-				craftItem("cookedMeat","meat",1);
+				if(checkNearCampfire == true)
+					craftItem("cookedMeat","meat",1);
 			GUI.Label (Rect (85, 161, 100, 20),GUIContent("1",fireIcon));
 			GUI.Label (Rect (120, 161, 100, 20),GUIContent("1",meatIcon));
 			
@@ -466,6 +467,18 @@ function craftCampfire(){
 	else{
 	alertEvent("Not Enough Resources");
 	}
+}
+
+function checkNearCampfire(){
+	var objects: GameObject[] =  GameObject.FindGameObjectsWithTag("Campfire");
+		var player = GameObject.FindGameObjectWithTag("Player");
+		
+		for(var i=0; i<objects.length; i++){
+			if(Vector3.Distance(player.transform.position, objects[i].transform.position)>2){
+				return true;
+		}
+	}
+	return false;
 }
 
 function updateDPS(){
