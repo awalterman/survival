@@ -91,6 +91,23 @@ function Update () {
 	}
 }
 
+function OnCollisionEnter (col : Collision) {
+	
+}
+
+function OnCollisionStay (col : Collision) {
+	Debug.Log("collision stay");
+	targetPosition = rigidbody.position;
+}
+
+function OnCollisionExit(collisionInfo : Collision) {
+}
+
+function updatePositionOnCollision () {
+	
+}
+
+
 function tryToFlee () {
 	isFleeing = true;
 	if (fleeingLoop == 0) {
