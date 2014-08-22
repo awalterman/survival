@@ -307,11 +307,11 @@ function Update () {
 	//update conditions
 	conditionCheck();
 	if(conditionCheck("Freezing")){
-		hunger -= .001;
-		health -= .001;	
+		hunger -= .01;
+		health -= .01;	
 	}
 	if(conditionCheck("Starving")){
-		health -= .001;
+		health -= .01;
 	}
 	//health and hunger updater
 	//spawn new world objects
