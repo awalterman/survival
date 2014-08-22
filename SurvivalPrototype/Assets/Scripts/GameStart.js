@@ -198,33 +198,69 @@ function OnGUI() {
 			if (GUI.Button(Rect(0,10,80,20),"Eat Berries"))
 				eatBerries();
 			GUI.Label (Rect (85, 10, 100, 20),GUIContent("1", berriesIcon));
+			
 			if (GUI.Button(Rect(0,35,80,20),"Axe"))
-				craftAxe();
-			GUI.Label (Rect (85, 36, 100, 20),GUIContent("10",woodIcon));
-			GUI.Label (Rect (120, 36, 100, 20),GUIContent("5",stoneIcon));
+				craftItem("axe", "woodShaft",1, "rock", 10);
+			GUI.Label (Rect (85, 36, 100, 20),GUIContent("1",woodShaftIcon));
+			GUI.Label (Rect (120, 36, 100, 20),GUIContent("10",rockIcon));
+			
 			if (GUI.Button(Rect(0,60,80,20),"Pickaxe"))
-				craftPickAxe();
-			GUI.Label (Rect (85, 61, 100, 20),GUIContent("20",woodIcon));
-			GUI.Label (Rect (120, 61, 100, 20),GUIContent("20",stoneIcon));
+				craftItem("pickAxe","woodShaft",3,"sharpenedStone",3);
+			GUI.Label (Rect (85, 61, 100, 20),GUIContent("3",woodShaftIcon));
+			GUI.Label (Rect (120, 61, 100, 20),GUIContent("3",sharpenedStoneIcon));
+			
 			if (GUI.Button(Rect(0,85,80,20),"Knife"))
-				craftKnife();
-			GUI.Label (Rect (85, 86, 100, 20),GUIContent("10",woodIcon));
-			GUI.Label (Rect (120, 86, 100, 20),GUIContent("40",stoneIcon));
+				craftItem("knife","woodShaft",1,"sharpenedStone",5);
+			GUI.Label (Rect (85, 86, 100, 20),GUIContent("1",woodShaftIcon));
+			GUI.Label (Rect (120, 86, 100, 20),GUIContent("5",sharpenedStoneIcon));
+			
 			if (GUI.Button(Rect(0,110,80,20),"Spear"))
-				craftSpear();
-			GUI.Label (Rect (85, 111, 100, 20),GUIContent("200",woodIcon));
-			GUI.Label (Rect (120, 111, 100, 20),GUIContent("200",stoneIcon));
+				craftItem("spear","woodShaft",5,"sharpenedStone",5);
+			GUI.Label (Rect (85, 111, 100, 20),GUIContent("5",woodShaftIcon));
+			GUI.Label (Rect (120, 111, 100, 20),GUIContent("5",sharpenedStoneIcon));
+			
 			if (GUI.Button(Rect(0,135,80,20),"Campfire"))
 				craftCampfire();
-			GUI.Label (Rect (85, 136, 100, 20),GUIContent("20",woodIcon));
-			GUI.Label (Rect (120, 136, 100, 20),GUIContent("1",rockIcon));
+			GUI.Label (Rect (85, 136, 100, 20),GUIContent("10",woodIcon));
+			GUI.Label (Rect (120, 136, 100, 20),GUIContent("5",rockIcon));
+			
 			if (GUI.Button(Rect(0,160,80,20),"Cook Meat"))
-				cookMeat();
+				craftItem("cookedMeat","meat",1);
 			GUI.Label (Rect (85, 161, 100, 20),GUIContent("1",fireIcon));
-			GUI.Label (Rect (120, 161, 100, 20),GUIContent("3",meatIcon));
-			if (GUI.Button(Rect(0,185,80,20),"Clothing"))
-				craftClothing();
-			GUI.Label (Rect (85, 186, 100, 20),GUIContent("5",hidesIcon));
+			GUI.Label (Rect (120, 161, 100, 20),GUIContent("1",meatIcon));
+			
+			if (GUI.Button(Rect(0,185,80,20),"Cloth Rags"))
+				craftItem("clothRags", "hides",10,"leaves",20);
+			GUI.Label (Rect (85, 186, 100, 20),GUIContent("10",hidesIcon));
+			GUI.Label (Rect (120, 186, 100, 20),GUIContent("20",leavesIcon));
+			
+			if (GUI.Button(Rect(0,210,80,20),"Wood Shaft"))
+				craftItem("woodShaft","wood",10);
+			GUI.Label (Rect (85, 211, 100, 20),GUIContent("10",woodIcon));
+			
+			if (GUI.Button(Rect(0,235,80,20),"Sharpened Stone"))
+				craftItem("sharpenedStone","stone",5, "rock", 3);
+			GUI.Label (Rect (85, 236, 100, 20),GUIContent("5",stoneIcon));
+			GUI.Label (Rect (120, 236, 100, 20),GUIContent("3",rockIcon));
+			
+			if (GUI.Button(Rect(0,260,80,20),"Leather"))
+				craftItem("leather","hides",2, "sharpenedStone", 1);
+			GUI.Label (Rect (85, 261, 100, 20),GUIContent("2",hidesIcon));
+			GUI.Label (Rect (120, 261, 100, 20),GUIContent("3",sharpenedStoneIcon));
+			
+			if (GUI.Button(Rect(0,285,80,20),"Healing Herb"))
+				craftItem("healingHerb","leaves",10, "berries", 10);
+			GUI.Label (Rect (85, 286, 100, 20),GUIContent("10",leavesIcon));
+			GUI.Label (Rect (120, 286, 100, 20),GUIContent("10",berriesIcon));
+			
+			if (GUI.Button(Rect(0,310,80,20),"Armor"))
+				craftItem("armor","leather",5);
+			GUI.Label (Rect (85, 311, 100, 20),GUIContent("5",leatherIcon));
+			
+			if (GUI.Button(Rect(0,335,80,20),"Stone Axe"))
+				craftItem("stoneAxe","woodShaft",3, "sharpenedStone", 5);
+			GUI.Label (Rect (85, 336, 100, 20),GUIContent("3",woodShaftIcon));
+			GUI.Label (Rect (120, 336, 100, 20),GUIContent("5",sharpenedStoneIcon));
 			GUI.EndScrollView();
 
 		if(alert){
@@ -399,7 +435,38 @@ function catchRabbit(){
 }
 
 	
-		
+function craftItem(result:String,item:String, amount:int, item2:String, amount2:int){
+	var rField = typeof(GameStart).GetField(result);
+	var iField = typeof(GameStart).GetField(item);
+	var i2Field = typeof(GameStart).GetField(item2);
+	var rslt :int = rField.GetValue(this);
+	var itm :int = iField.GetValue(this);
+	var itm2 :int = i2Field.GetValue(this);
+	if (itm > amount && itm2 > amount2){
+		rField.SetValue(this, rslt + 1)	;
+		iField.SetValue(this, itm - amount);
+		i2Field.SetValue(this, itm2 - amount2);
+		alertEvent(result.GetType().Name + " Crafted");
+	}
+	return result;
+
+}
+
+function craftItem(result:String,item:String, amount:int){
+
+//Debug.Log(result +"  " + item +"  " + amount);
+	var rField = typeof(GameStart).GetField(result);
+	var iField = typeof(GameStart).GetField(item);
+	var rslt :int = rField.GetValue(this);
+	var itm :int = iField.GetValue(this);
+	if (itm > amount){
+		rField.SetValue(this, rslt + 1)	;
+		updateInventory();
+		iField.SetValue(this, itm - amount);
+		alertEvent(result.GetType().Name + " Crafted");
+	}
+	return result;
+}
 				
 function craftAxe(){
 	if(wood>=10 && stone>=5 && hasAxe == false){
