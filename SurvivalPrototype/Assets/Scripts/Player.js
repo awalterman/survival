@@ -170,7 +170,7 @@ function updateState() {
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
 	Debug.DrawLine(rigidbody.position, targetPosition);
 	var moveDistance = targetDirection.magnitude;
-	if (isCollecting()) {
+	if (Time.time * 1000 - lastCollectTime < collectPace) {
 		playerState = PlayerStatus.COLLECTING;
 	} else if (moveDistance > 0.5) {
 		if (playerSource.conditionCheck("Freezing") || playerSource.conditionCheck("Cold")) {
@@ -185,7 +185,7 @@ function updateState() {
 }
 
 function isCollecting() {
-	return (Time.time * 1000 - lastCollectTime < collectPace);
+	return (playerState == PlayerStatus.COLLECTING);
 }
 
 public function hasCollected() {
@@ -193,7 +193,7 @@ public function hasCollected() {
 }
 
 function playAnimationForState(state:PlayerStatus) {
-	if (animation.isPlaying && currentAnimation >= state) {
+	if (animation.isPlaying && currentAnimation == state) {
 		return;
 	}
 	currentAnimation = state;
