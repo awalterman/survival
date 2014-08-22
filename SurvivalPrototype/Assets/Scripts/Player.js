@@ -1,4 +1,5 @@
-﻿public var camera: GameObject;
+﻿#pragma strict
+public var camera: GameObject;
 
 enum PlayerStatus {
 	IDLE,
@@ -14,6 +15,7 @@ public var rotationSpeed = 6;
 public var rotationCutoff = 1;
 public var spacing = 0.5;
 public var targetPosition = Vector3(25, 0, 25);
+public var targetDirection = Vector3(0,0,0);
 public var collectPace : float = 300;
 public var idleAnimations : String[];
 public var walkAnimations : String[];
@@ -33,7 +35,6 @@ function Start () {
 	cameraOffset = Camera.main.transform.position;
 	rigidbody.position = targetPosition;
    	Camera.main.transform.position = rigidbody.position + cameraOffset;
-	oldPosition = rigidbody.position;
 	playerSource = Camera.main.GetComponent("GameStart");
 }
 
@@ -103,7 +104,7 @@ function moveTowardsTargetPosition() {
 	targetDirection = targetPosition - rigidbody.position;
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
 	Debug.DrawLine(rigidbody.position, targetPosition);
-	distance = targetDirection.magnitude;
+	var distance = targetDirection.magnitude;
 	if (distance > rotationCutoff) {
 		var newDir = Vector3.RotateTowards(transform.forward, targetDirection, rotationSpeed * Time.deltaTime, 0);
 		rigidbody.rotation = Quaternion.LookRotation(newDir);
@@ -117,7 +118,7 @@ function updateState() {
 	targetDirection = targetPosition - rigidbody.position;
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
 	Debug.DrawLine(rigidbody.position, targetPosition);
-	moveDistance = targetDirection.magnitude;
+	var moveDistance = targetDirection.magnitude;
 	if (Time.time * 1000 - lastCollectTime < collectPace) {
 		playerState = PlayerStatus.COLLECTING;
 	} else if (moveDistance > 0.5) {
