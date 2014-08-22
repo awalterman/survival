@@ -220,7 +220,7 @@ function OnGUI() {
 			GUI.Label (Rect (120, 161, 100, 20),GUIContent("1",meatIcon));
 			
 			if (GUI.Button(Rect(0,185,80,20),"Cloth Rags"))
-				craftItem("clothRags", "hides",10,"leaves",20);
+				craftItem("clothRags", "hide",10,"leaves",20);
 			GUI.Label (Rect (85, 186, 100, 20),GUIContent("10",hidesIcon));
 			GUI.Label (Rect (120, 186, 100, 20),GUIContent("20",leavesIcon));
 			
@@ -234,7 +234,7 @@ function OnGUI() {
 			GUI.Label (Rect (120, 236, 100, 20),GUIContent("3",rockIcon));
 			
 			if (GUI.Button(Rect(0,260,80,20),"Leather"))
-				craftItem("leather","hides",2, "sharpenedStone", 1);
+				craftItem("leather","hide",2, "sharpenedStone", 1);
 			GUI.Label (Rect (85, 261, 100, 20),GUIContent("2",hidesIcon));
 			GUI.Label (Rect (120, 261, 100, 20),GUIContent("3",sharpenedStoneIcon));
 			
@@ -252,6 +252,7 @@ function OnGUI() {
 			GUI.Label (Rect (85, 336, 100, 20),GUIContent("3",woodShaftIcon));
 			GUI.Label (Rect (120, 336, 100, 20),GUIContent("5",sharpenedStoneIcon));
 			GUI.EndScrollView();
+			GUI.Label(Rect (300, 20, 300, 200),alertText);
 
 		//consumables
 		if(berries>0){
@@ -269,10 +270,6 @@ function OnGUI() {
 		if(healingHerb>0){
 			if (GUI.Button(Rect(380,y-40,30,30),healingHerbIcon))
 				eatHealingHerb();
-		}
-
-		if(alert){
-			GUI.Label(Rect ((x/2)-50, 20, 100, 50),alertText);
 		}
 	
 	}
@@ -357,24 +354,6 @@ function conditionCheck(){
 		}	
 	}	
 }
-
-function barUpdate()
-{
-	if(hunger != 0){
-		alert = false;
-		alertText = "";
-	}
-	else{
-		health --;
-		clearConditions();
-	}
-	if(conditionCheck("Freezing")){
-		health --;	
-		clearConditions();
-	}
-}
-
-
 
 
 

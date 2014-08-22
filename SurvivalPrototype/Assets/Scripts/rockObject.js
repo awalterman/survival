@@ -41,7 +41,6 @@ function OnMouseDown() {
 function gatherRock(){
 	playerSource.rock +=1;
 	playerSource.alertText = "1 Rock Collected";
-	playerSource.alertTextReset();
 	playerSource.energyCountDown();
 }
 
