@@ -49,7 +49,6 @@ function gatherStone(){
 	playerSource.stone +=1;
 	playerSource.alertText = "1 Stone Collected";
 	}
-	playerSource.hunger -= playerSource.hungerPerCollect;
 	playerSource.energyCountDown();
 }
 
