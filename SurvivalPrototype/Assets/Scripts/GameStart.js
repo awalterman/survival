@@ -1,7 +1,7 @@
 ﻿#pragma strict
 
- var health = 100;
- var hunger = 100;
+ var health = 100.0;
+ var hunger = 100.0;
  var alert = true;
  var alertText = "";
  var timer = 0.0;
@@ -211,7 +211,7 @@ function OnGUI() {
 			
 			if (GUI.Button(Rect(0,135,80,20),"Campfire"))
 				craftCampfire();
-			GUI.Label (Rect (85, 136, 100, 20),GUIContent("10",woodIcon));
+			GUI.Label (Rect (85, 136, 100, 20),GUIContent("5",woodIcon));
 			GUI.Label (Rect (120, 136, 100, 20),GUIContent("5",rockIcon));
 			
 			if (GUI.Button(Rect(0,160,80,20),"Cook Meat"))
@@ -276,6 +276,7 @@ function OnGUI() {
 	//gameOver
 	else if (gameLost == true)
 	{
+		PlayerPrefs.SetInt("TimeLived",timer);
 		Application.LoadLevel("gameEnd");	
 	}
 	else if (gameWin == true){
@@ -454,12 +455,12 @@ function craftItem(result:String,item:String, amount:int){
 }
 				
 function craftCampfire(){
-	if(wood>10 && rock>5 ){
+	if(wood>=5 && rock>=5 ){
 		Instantiate(campfireObject, transform.position, transform.rotation);
 		removeCondition("Cold");
 		removeCondition("Freezing");
 		turnCounter = 0;
-		wood -=20;
+		wood -=5;
 		alertEvent("Campfire Crafted and Placed \n Exploring will leave it behind");
 	}
 	else{

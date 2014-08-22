@@ -91,6 +91,11 @@ function Update () {
 	}
 }
 
+function updatePositionOnCollision () {
+	
+}
+
+
 function tryToFlee () {
 	isFleeing = true;
 	if (fleeingLoop == 0) {
@@ -126,6 +131,11 @@ function rotateToInitialPoint () {
 function OnCollisionEnter (col : Collision) {
 	rotateToInitialPoint();
 }
+
+function OnCollisionStay (col : Collision) {
+	rotateToInitialPoint();
+}
+
 
 function roamAroundLazy () {
 	if (!isAnimalInsideBoundaryRadius(transform.position, maxRoamDistance)) {
@@ -218,6 +228,14 @@ function tryToAttack () {
 		lastAttackTime = Time.time * 1000;
 		playAnimation(AnimationTypes.ATTACK);
 		playerSource.health -= damage;
+		
+		var players : GameObject[];
+		var player : GameObject;
+		players = GameObject.FindGameObjectsWithTag("Player");
+		player = players[0];
+		var playerComponent : Player;
+		playerComponent = player.GetComponent(Player);
+		playerComponent.wasAttacked();
 	} else {
 	}
 }

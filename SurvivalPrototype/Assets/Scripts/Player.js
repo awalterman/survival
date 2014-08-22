@@ -25,7 +25,13 @@ public var collectingAnimations : String[];
 public var deadAnimations : String[];
 public var walkPingEffect : GameObject;
 public var searchEffect : GameObject;
+public var bloodEffect : GameObject;
 public var movementDistanceToConsumeEnergy : float = 10;
+
+public var timeToShowAttackedEffect : float = 500;
+var showingAttackEffect : boolean = false;
+var timestampOfShownEffect : float;
+var initialColor : Color;
 
 public var playerState = PlayerStatus.IDLE;
 var lastCollectTime : float;
@@ -46,6 +52,7 @@ function Start () {
    	Camera.main.transform.position = rigidbody.position + cameraOffset;
 	playerSource = Camera.main.GetComponent("GameStart");
 	lastCollectTime = Time.time * 1000;
+	initialColor = renderer.material.color;
 }
 
 function FixedUpdate () {
@@ -77,6 +84,12 @@ function FixedUpdate () {
 		addMovePingEffect();
 	}
 	calculateEnergyUsage();
+	
+	if (showingAttackEffect) {
+		showingAttackEffect = false;
+		timestampOfShownEffect = Time.time * 1000;
+		renderer.material.color = initialColor;
+	}
 }
 
 function calculateEnergyUsage() {
@@ -125,12 +138,10 @@ function Update(){
 }
 
 function OnCollisionEnter (col : Collision) {
-	// print("Ran into object: " + col.transform.name);
 	targetPosition = rigidbody.position;
 }
 
 function OnCollisionStay (col : Collision) {
-	Debug.Log("collision stay");
 	targetPosition = rigidbody.position;
 }
 
@@ -159,7 +170,7 @@ function updateState() {
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
 	Debug.DrawLine(rigidbody.position, targetPosition);
 	var moveDistance = targetDirection.magnitude;
-	if (isCollecting()) {
+	if (Time.time * 1000 - lastCollectTime < collectPace) {
 		playerState = PlayerStatus.COLLECTING;
 	} else if (moveDistance > 0.5) {
 		if (playerSource.conditionCheck("Freezing") || playerSource.conditionCheck("Cold")) {
@@ -174,7 +185,7 @@ function updateState() {
 }
 
 function isCollecting() {
-	return (Time.time * 1000 - lastCollectTime < collectPace);
+	return (playerState == PlayerStatus.COLLECTING);
 }
 
 public function hasCollected() {
@@ -182,7 +193,7 @@ public function hasCollected() {
 }
 
 function playAnimationForState(state:PlayerStatus) {
-	if (animation.isPlaying && currentAnimation >= state) {
+	if (animation.isPlaying && currentAnimation == state) {
 		return;
 	}
 	currentAnimation = state;
@@ -223,4 +234,14 @@ function addMovePingEffect() {
 	particleObject = GameObject.Instantiate(walkPingEffect, Vector3(targetPosition.x, 1, targetPosition.z), Quaternion.Euler(90,0,0));
 	particleObject.particleSystem.Play();
 	
+}
+
+public function wasAttacked() {
+	if (showingAttackEffect == false) {
+		showingAttackEffect = true;
+		timestampOfShownEffect = Time.time * 1000;
+		renderer.material.color = Color.red;
+		var effect : GameObject;
+		effect = GameObject.Instantiate(bloodEffect, Vector3(rigidbody.position.x, 1, rigidbody.position.z), Quaternion.Euler(0, 0, 0));
+	}
 }
