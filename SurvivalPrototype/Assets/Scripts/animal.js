@@ -9,6 +9,12 @@ public var walkSpeed : float = 1;
 public var runSpeed : float = 2;
 public var attackPace : float = 100;
 public var viewAngle : float = 35;
+public var difficultyLevel : int = 1;
+public var maxChaseDistance : float = 30;
+public var maxRoamDistance : float = 5;
+public var animalFreeWaitTimeLoop : int = 50;
+public var animalFreeRoamTimeLoop : int = 500;
+
 public var idleAnimations : String[];
 public var attackAnimation : String[];
 public var angryAnimation : String[];
@@ -22,6 +28,11 @@ var player : GameObject;
 var lastAttackTime : float;
 var isAttacking : boolean;
 
+private var initialPosition : Vector3;
+private var waitingLoop : int;
+private var runningLoop : int;
+private var currentAnimation : AnimationTypes;
+
 enum AnimationTypes {
 	IDLE,
 	WALK,
@@ -32,10 +43,12 @@ enum AnimationTypes {
 }
 
 function Start () {
+	initialPosition = transform.position;
 	player = GameObject.FindGameObjectWithTag("Player");
 	isAttacking = false;
 	playerSource = Camera.main.GetComponent("GameStart");
-
+	waitingLoop = animalFreeWaitTimeLoop;
+	runningLoop = animalFreeRoamTimeLoop;
 }
 
 function Update () {
@@ -47,14 +60,71 @@ function Update () {
 			moveTowardsPlayer();
 		}
 	} else if (isInAttackRange()){
+		isAttacking = true;
 		tryToAttack();
 	} else {
+		isAttacking = false;
+		roamAroundLazy();
+	}
+}
+
+function rotateToInitialPoint () {
+  	var direction = (initialPosition - transform.position).normalized;
+	var	lookRotation = Quaternion.LookRotation(direction);
+	transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * walkSpeed * 5);
+}
+
+function OnCollisionEnter (col : Collision) {
+	rotateToInitialPoint();
+}
+
+function roamAroundLazy () {
+	if (!isAnimalInsideBoundaryRadius(transform.position, maxRoamDistance)) {
+		rotateToInitialPoint();
+		playAnimation(AnimationTypes.WALK);
+		transform.position = Vector3.MoveTowards(transform.position, initialPosition, walkSpeed * Time.deltaTime);
+		return;
+	}
+	if (waitingLoop > 0) {
+		waitingLoop--;
+		return;
+	}
+	if (runningLoop > 0 || Random.Range(0,4) < 1) {
+		if (runningLoop > 0) {
+			runningLoop --;
+		} else {
+			runningLoop = animalFreeRoamTimeLoop;
+		}
+		if(Random.Range(0,9) > 6) {
+			transform.Rotate(0, walkSpeed*Time.deltaTime, 0);
+		} else {
+			var distanceToMove = transform.forward * walkSpeed * Time.deltaTime;
+			var newPossiblePosition = Vector3.MoveTowards(transform.position, transform.position + distanceToMove, walkSpeed);
+			var xDistRoamed = Mathf.Abs(newPossiblePosition.x - initialPosition.x);
+			var zDistRoamed = Mathf.Abs(newPossiblePosition.z - initialPosition.z);
+			var dist = Mathf.Sqrt(Mathf.Pow(xDistRoamed,2)+Mathf.Pow(zDistRoamed,2));
+			playAnimation(AnimationTypes.WALK);
+			if (isAnimalInsideBoundaryRadius(newPossiblePosition, maxRoamDistance)) {
+				transform.position = newPossiblePosition;
+			} else {
+				rotateToInitialPoint();
+			}
+		}
+	} else {
+		waitingLoop = animalFreeWaitTimeLoop;
 		playAnimation(AnimationTypes.IDLE);
 	}
 }
 
+function isAnimalInsideBoundaryRadius (curPos:Vector3, maxDist:float) {
+	var xDistRoamed = Mathf.Abs(curPos.x - initialPosition.x);
+	var zDistRoamed = Mathf.Abs(curPos.z - initialPosition.z);
+	var dist = Mathf.Sqrt(Mathf.Pow(xDistRoamed,2)+Mathf.Pow(zDistRoamed,2));
+	return (dist <= maxDist);
+}
+
 function isInPlayerRange () {
-	return (distanceFromPlayer() <= targetRange);
+	return (distanceFromPlayer() <= targetRange && isAnimalInsideBoundaryRadius(transform.position, maxChaseDistance));
 }
 
 function isInLineOfSight () {
@@ -80,7 +150,7 @@ function isFacingPlayer () {
 }
 
 function isInAttackRange () {
-	return (distanceFromPlayer() <= attackRange);
+	return (distanceFromPlayer() <= attackRange && isAnimalInsideBoundaryRadius(transform.position, maxChaseDistance));
 }
 
 function distanceFromPlayer () {
@@ -102,8 +172,6 @@ function tryToAttack () {
 		playAnimation(AnimationTypes.ATTACK);
 		playerSource.health -= damage;
 	} else {
-		// do idle angry animation
-//		playAnimation(AnimationTypes.ANGRY);
 	}
 }
 
@@ -138,6 +206,10 @@ function animalDidDie () {
 }
 
 function playAnimation(animationType:AnimationTypes) {
+	if (currentAnimation == animationType) {
+		return;
+	}
+	currentAnimation = animationType;
 	switch(animationType) {
 		case AnimationTypes.IDLE:
 			playAnimationFromList(idleAnimations);
@@ -166,5 +238,6 @@ function playAnimation(animationType:AnimationTypes) {
 function playAnimationFromList (animations:String[]) {
 	var index = Random.Range(0, animations.Length);
 	var animationName = animations[index];
+//	Debug.Log(animationName);
 	animation.CrossFade(animationName);
 }
