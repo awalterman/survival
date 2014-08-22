@@ -1,6 +1,8 @@
 fileFormatVersion: 2
 guid: 1d0b6318d22154f64b41274bbe446361
 TextureImporter:
+  fileIDToRecycleName:
+    21300000: Tom_Axe_Icon_Small
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -24,9 +26,9 @@ TextureImporter:
   maxTextureSize: 1024
   textureSettings:
     filterMode: -1
-    aniso: -1
+    aniso: 1
     mipBias: -1
-    wrapMode: -1
+    wrapMode: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
