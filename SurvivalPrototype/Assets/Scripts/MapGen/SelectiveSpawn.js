@@ -3,7 +3,9 @@
 public var spawnChance : float = 50;
 
 function Start() {
-	if (Random.Range(0, 100) > spawnChance) {
-		GameObject.Destroy(gameObject);
+	for (var i = transform.childCount - 1; i >= 0; i--) {
+		if (Random.Range(0, 100) > spawnChance) {
+			GameObject.Destroy(transform.GetChild(i).gameObject);
+		}		
 	}
 }

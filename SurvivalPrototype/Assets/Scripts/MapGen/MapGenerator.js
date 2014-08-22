@@ -2,7 +2,7 @@
 
 import System.Collections.Generic;
 
-public var tilePrefab : GameObject;
+public var tilePrefabs : GameObject[];
 public var allowRandom : boolean = true;
 public var debugAllowRespawn : boolean = false;
 
@@ -28,7 +28,7 @@ private var madeMap = [
 ];
 
 function Start() {
-	tileDim = tilePrefab.transform.localScale.x;
+	tileDim = tilePrefabs[0].transform.localScale.x;
 	PermuteMap();
 }
 
@@ -82,7 +82,7 @@ private function PermuteMap() {
 					tileVal == 1 && allowRandom && randSpawn) {
 				var z = -(i - w/2);
 				var x = j - h/2;
-				newTile = GameObject.Instantiate(tilePrefab);
+				newTile = GameObject.Instantiate(tilePrefabs[Random.Range(0, tilePrefabs.length)]);
 				newTile.transform.parent = transform;
 				newTile.transform.position = new Vector3(x * tileDim, 0, z * tileDim) + transform.position;
 				newTile.GetComponent.<MapTile>().SetDoors(0);
