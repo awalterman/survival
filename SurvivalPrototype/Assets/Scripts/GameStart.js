@@ -482,7 +482,7 @@ function checkNearCampfire(){
 		var player = GameObject.FindGameObjectWithTag("Player");
 		
 		for(var i=0; i<objects.length; i++){
-			if(Vector3.Distance(player.transform.position, objects[i].transform.position)>2){
+			if(Vector3.Distance(player.transform.position, objects[i].transform.position)<2){
 				return true;
 		}
 	}
