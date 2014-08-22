@@ -24,6 +24,7 @@ public var attackAnimations : String[];
 public var collectingAnimations : String[];
 public var deadAnimations : String[];
 public var walkPingEffect : GameObject;
+public var searchEffect : GameObject;
 public var movementDistanceToConsumeEnergy : float = 10;
 
 public var playerState = PlayerStatus.IDLE;
@@ -122,7 +123,6 @@ function Update(){
 function OnCollisionEnter (col : Collision) {
 	// print("Ran into object: " + col.transform.name);
 	targetPosition = rigidbody.position;
-	moveTowardsTargetPosition();
 }
 
 function OnCollisionStay (col : Collision) {

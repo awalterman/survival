@@ -37,6 +37,9 @@ public function attemptCollect(name : String) {
 		Debug.Log("Collected " + name);
 		life --;
 		playerComponent.hasCollected();
+		var searchEffect : GameObject;
+		searchEffect = GameObject.Instantiate(playerComponent.searchEffect, transform.position, Quaternion.Euler(0,0,0));
+		searchEffect.particleSystem.Play();
 		return true;
 	} else {
 		Debug.Log("Cannot collect " + name);
