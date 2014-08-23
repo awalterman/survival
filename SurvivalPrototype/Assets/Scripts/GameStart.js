@@ -29,7 +29,7 @@
 //resources
  var wood=0;
  var stone=0;
-	var berries=0;
+var berries=0;
  var inventory = new Array ();
  var inventoryString = "";
  var tip = "";
@@ -46,29 +46,29 @@
  var healingHerb = 0;
  var cookedMeat = 0;
  var clothRags = 0;
- var armor = 0;
- var axe = 0;
- var pickAxe = 0;
- var stoneAxe = 0;
- var knife = 0;
- var spear = 0;
+var armor = 0;
+var axe = 0;
+var pickAxe = 0;
+var stoneAxe = 0;
+var knife = 0;
+var spear = 0;
 
 //world generation
- var spawner = 0;
- var chanceForBerry = 50;
- var chanceForTree = 20;
- var chanceForStone = 75;
- var chanceForRock = 40;
- var chanceForRabbit = 70;
- var chanceForDeer = 80;
- var chanceForWolf = 85;
- var chanceForBear = 95;
- var wolfHealth = 20;
- var bearHealth = 50;
- var chanceToEscapeWolf = .6;
- var chanceToEscapeBear = .8;
- var bearDPS = 25;
- var wolfDPS = 15;
+var spawner = 0;
+var chanceForBerry = 50;
+var chanceForTree = 20;
+var chanceForStone = 75;
+var chanceForRock = 40;
+var chanceForRabbit = 70;
+var chanceForDeer = 80;
+var chanceForWolf = 85;
+var chanceForBear = 95;
+var wolfHealth = 20;
+var bearHealth = 50;
+var chanceToEscapeWolf = .6;
+var chanceToEscapeBear = .8;
+var bearDPS = 25;
+var wolfDPS = 15;
 
 public var woodIcon: Texture2D;
 public var stoneIcon: Texture2D;
@@ -534,14 +534,5 @@ function conditionCheck(item: String)
 
 function clearConditions(){
 	conditionList = new Array();
-}
-
-function canAttack(pos: Vector3){
-	if(Vector3.Distance(this.transform.position, pos)<300){
-		return true;
-	}
-	else{
-		return false;
-	}
 }
 
