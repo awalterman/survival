@@ -15,10 +15,20 @@ public class EnemySpawnNode : MonoBehaviour {
 	private int generation = 0;
 	private List<GameObject> spawnedObjects = new List<GameObject>();
 
+	private GameObject player;
+
+	private const float kMinDist = 15.0f;
+
+	void Start() {
+		player = GameObject.Find("Player");
+	}
+
 	void Update() {
 		timer += Time.deltaTime;
 		if (timer >= nextSpawnTime) {
-			if (Random.Range(0, 100) < SpawnChance() && spawnedObjects.Count < 2) {
+			if ((generation == 0 || Random.Range(0, 100) < SpawnChance())
+					&& spawnedObjects.Count < 2
+					&& Vector3.Distance(transform.position, player.transform.position) > kMinDist) {
 				GameObject toSpawn;
 				if (Random.Range(0, 100) < PassiveSpawnChance()) {
 					if (Random.Range(0, 100) < HarderSpawnChance()) {
