@@ -464,7 +464,7 @@ function craftItem(result:String,item:String, amount:int){
 function craftCampfire(){
 	if(wood>=5 && leaves>=5 ){
 		var player = GameObject.FindGameObjectWithTag("Player");
-		Instantiate(campfireObject, player.transform.position, player.transform.rotation);
+		Instantiate(campfireObject, player.rigidbody.position+player.transform.forward+Vector3(0,0.8224776,0), player.transform.rotation);
 		removeCondition("Cold");
 		removeCondition("Freezing");
 		turnCounter = 0;
