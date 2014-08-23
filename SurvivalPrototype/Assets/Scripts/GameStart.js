@@ -214,11 +214,13 @@ function OnGUI() {
 			GUI.Label (Rect (85, 136, 100, 20),GUIContent("5",woodIcon));
 			GUI.Label (Rect (120, 136, 100, 20),GUIContent("5",leavesIcon));
 			
-			if (GUI.Button(Rect(0,160,80,20),"Cook Meat"))
-				if(checkNearCampfire == true)
+			if (GUI.Button(Rect(0,160,80,20),"Cook Meat")) {
+				if (checkNearCampfire()) {
 					craftItem("cookedMeat","meat",1);
-				else
+				} else {
 					alertText = "Not Near Fire";
+				}
+			}
 			GUI.Label (Rect (85, 161, 100, 20),GUIContent("1",fireIcon));
 			GUI.Label (Rect (120, 161, 100, 20),GUIContent("1",meatIcon));
 			
@@ -385,7 +387,7 @@ function conditionCheck(){
 	if(clothRags>0){
 		turnsToCold = 60;
 	}
-	if(checkNearCampfire == true){
+	if(checkNearCampfire() == true){
 		removeCondition("Freezing");
 		removeCondition("Cold");
 	}
