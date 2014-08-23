@@ -20,6 +20,8 @@ public var minMeatReward : int = 10;
 public var maxMeatReward : int = 50;
 public var minHideReward : int = 10;
 public var maxHideReward : int = 50;
+public var lazyAudio : AudioClip;
+
 
 public var idleAnimations : String[];
 public var attackAnimation : String[];
@@ -29,7 +31,8 @@ public var runAnimation : String[];
 public var hurtAnimation : String[];
 public var deathAnimation : String[];
 private var playerSource: GameStart;
-
+private var attackAudio : AudioClip;
+private var lastLazySoundTime : float = 0;
 
 var player : GameObject;
 var lastAttackTime : float;
@@ -63,6 +66,8 @@ function Start () {
 	runningLoop = animalFreeRoamTimeLoop;
 	restingLoop = 0;
 	isAnimalDead = false;
+	attackAudio = audio.clip;
+	
 }
 
 function Update () {
@@ -89,12 +94,7 @@ function Update () {
 			isAttacking = true;
 			tryToAttack();
 		} else {
-			if(restingLoop < animalRestTimeLoop) {
-				restingLoop++;
-				playAnimation(AnimationTypes.IDLE);
-			} else {
-				tryToFlee();
-			}
+			tryToFlee();
 		}
 	} else {
 		isAttacking = false;
@@ -108,7 +108,7 @@ function tryToFlee () {
 	if (fleeingLoop == 0) {
 		fleeingLoop = fleeTimeLoop;
 	}
-
+	playAttackSound(true);
 	if(Random.Range(0,9) > 7) {
 		transform.Rotate(0, runSpeed * 5 * Time.deltaTime, 0);
 	} else {
@@ -129,7 +129,6 @@ function tryToFlee () {
 		fleeingLoop = 0;
 		isFleeing = false;
 	}
-	restingLoop = animalRestTimeLoop * (fleeingLoop / fleeTimeLoop);
 }
 
 function tryToRotateIfGoingToHit () {
@@ -162,6 +161,8 @@ function roamAroundLazy () {
 		transform.position = Vector3.MoveTowards(transform.position, initialPosition, walkSpeed * Time.deltaTime);
 		return;
 	}
+//	playAttackSound(false);
+	playLazySound();
 	if (waitingLoop > 0) {
 		waitingLoop--;
 		return;
@@ -237,10 +238,12 @@ function moveTowardsPlayer () {
 	playAnimation(AnimationTypes.RUN);
 	transform.LookAt(player.transform);
 	transform.position = Vector3.MoveTowards(transform.position, player.transform.position, runSpeed * Time.deltaTime);
+	playAttackSound (true);
 }
 
 function tryToAttack () {
 	if (canAttack()) {
+		playAttackSound (true);
 		if (!isFacingPlayer()) {
 			transform.LookAt(player.transform);
 		}
@@ -361,4 +364,24 @@ function playAnimationFromList (animations:String[]) {
 	var animationName = animations[index];
 	animation[animationName].wrapMode = WrapMode.Once;
 	animation.CrossFade(animationName);
+}
+
+function playLazySound() {
+	if (lazyAudio && !audio.isPlaying) {
+		if (Time.time - lastLazySoundTime >= 4 && isInPlayerRange()) {
+			audio.PlayOneShot(lazyAudio);
+			lastLazySoundTime = Time.time;
+		}
+	}	
+}
+
+function playAttackSound (shouldPlay:boolean) {
+	if (!shouldPlay && playerSource.isPlayingAttackSound) {
+		audio.Stop();
+		playerSource.isPlayingAttackSound = false;
+	} else if(!playerSource.isPlayingAttackSound){
+		audio.clip = attackAudio;
+		playerSource.isPlayingAttackSound = true;
+		audio.Play();
+	}
 }

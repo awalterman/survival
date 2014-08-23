@@ -45,8 +45,7 @@ var cameraOffset : Vector3;
 private var playerSource: GameStart;
 private var currentAnimation : PlayerStatus;
 
-private var didMoveLastFrame : int;
-private var lastTargetPosition : Vector3;
+private var lastPosition : Vector3;
 
 function Start () {
 	cameraOffset = Camera.main.transform.position;
@@ -55,6 +54,7 @@ function Start () {
    	Camera.main.transform.position = rigidbody.position + cameraOffset;
 	playerSource = Camera.main.GetComponent("GameStart");
 	lastCollectTime = Time.time * 1000;
+	lastPosition = rigidbody.position;
 	// initialColor = renderer.material.color;
 }
 
@@ -152,7 +152,6 @@ function OnCollisionExit(collisionInfo : Collision) {
 }
 
 function moveTowardsTargetPosition() {
-	var oldPos = rigidbody.position;
 	targetPosition = Vector3(targetPosition.x, 0, targetPosition.z);
 	targetDirection = targetPosition - rigidbody.position;
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
@@ -165,6 +164,10 @@ function moveTowardsTargetPosition() {
 	rigidbody.position = Vector3.MoveTowards(rigidbody.position, targetPosition, speed * Time.deltaTime);
     Camera.main.transform.position = rigidbody.position + cameraOffset;
     var newPos = rigidbody.position;
+    if (Vector3.Distance(lastPosition, newPos) >= 1 && !audio.isPlaying && (animation.isPlaying && currentAnimation == PlayerStatus.RUN)) {
+    	audio.Play();
+    	lastPosition = rigidbody.position;
+    }
 }
 
 function updateState() {

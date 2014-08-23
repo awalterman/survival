@@ -96,6 +96,7 @@ public var knifeIcon: Texture2D;
 public var spearIcon: Texture2D;
 
 public var campfireObject: GameObject;
+public var isPlayingAttackSound : boolean = false;
 
 public static var didClickGui = false;
 private var player : Player;
