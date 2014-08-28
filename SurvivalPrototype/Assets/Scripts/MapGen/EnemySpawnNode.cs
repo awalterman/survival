@@ -18,6 +18,7 @@ public class EnemySpawnNode : MonoBehaviour {
 	private GameObject player;
 
 	private const float kMinDist = 15.0f;
+	private const float kMaxDist = 75.0f;
 
 	void Start() {
 		player = GameObject.Find("Player");
@@ -26,9 +27,10 @@ public class EnemySpawnNode : MonoBehaviour {
 	void Update() {
 		timer += Time.deltaTime;
 		if (timer >= nextSpawnTime) {
+			var distFromPlayer = Vector3.Distance(transform.position, player.transform.position);
 			if ((generation == 0 || Random.Range(0, 100) < SpawnChance())
-					&& spawnedObjects.Count < 2
-					&& Vector3.Distance(transform.position, player.transform.position) > kMinDist) {
+					&& spawnedObjects.Count <= 2
+					&& distFromPlayer > kMinDist && distFromPlayer < kMaxDist) {
 				GameObject toSpawn;
 				if (Random.Range(0, 100) < PassiveSpawnChance()) {
 					if (Random.Range(0, 100) < HarderSpawnChance()) {
@@ -40,15 +42,21 @@ public class EnemySpawnNode : MonoBehaviour {
 				}
 				else {
 					if (Random.Range(0, 100) < HarderSpawnChance()) {
+						Debug.Log("bear");
 						toSpawn = bearPrefab;
 					}
 					else {
+						Debug.Log("wolf");
 						toSpawn = wolfPrefab;
 					}
 				}
 				GameObject spawned = GameObject.Instantiate(toSpawn, transform.position, Quaternion.identity) as GameObject;
 				spawned.transform.parent = transform;
 				spawnedObjects.Add(spawned);
+			} else if (distFromPlayer > kMaxDist * 2) {
+				foreach (GameObject spawnedObject in spawnedObjects) {
+					Destroy(spawnedObject);
+				}
 			}
 
 			generation++;
@@ -57,12 +65,12 @@ public class EnemySpawnNode : MonoBehaviour {
 	}
 
 	private float SpawnChance() {
-		return 50;
+		return 25;
 	}
 	private float PassiveSpawnChance() {
-		return 100 - 10 * generation;
+		return Mathf.Min(85, Mathf.Max(30, 100 - 10 * generation));
 	}
 	private float HarderSpawnChance() {
-		return 50;
+		return Mathf.Min(40, 100 - 10 * generation);
 	}
 }

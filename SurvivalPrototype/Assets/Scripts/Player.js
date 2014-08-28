@@ -174,7 +174,6 @@ function updateState() {
 	targetPosition = Vector3(targetPosition.x, 0, targetPosition.z);
 	targetDirection = targetPosition - rigidbody.position;
 	targetDirection = Vector3(targetDirection.x, 0, targetDirection.z);
-	Debug.DrawLine(rigidbody.position, targetPosition);
 	var moveDistance = targetDirection.magnitude;
 	if (Time.time * 1000 - lastAttackTime < attackPace) {
 		playerState = PlayerStatus.ATTACK;
