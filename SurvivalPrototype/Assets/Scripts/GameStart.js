@@ -96,10 +96,102 @@ public var knifeIcon: Texture2D;
 public var spearIcon: Texture2D;
 
 public var campfireObject: GameObject;
+public var isPlayingAttackSound : boolean = false;
 
 public static var didClickGui = false;
 private var player : Player;
 
+// Cheat
+private var cheatCode : String = "";
+private var isGODMode : boolean = false;
+private var isCheatNoHunger : boolean = false;
+private var isCheatNoDamage : boolean = false;
+private var isCheatNoCondition : boolean = false;
+private var isCheatInfDamage : boolean = false;
+
+function tryToAddCheat () {
+	var cheatUsed : String;
+	Debug.Log(cheatCode);
+	if (cheatCode.Equals(".angel")) {
+		cheatUsed = "Toggle God Mode";
+		isGODMode = !isGODMode;
+		isCheatInfDamage = isGODMode;
+		cheatItems();
+		if (isGODMode) {
+			dps = 99999;
+		} else {
+			dps = 10;
+			updateDPS();
+			
+		}
+	} else if (cheatCode.Equals(".nila")) {
+		cheatUsed = "No Hunger";
+		isCheatNoHunger = !isCheatNoHunger;
+	} else if (cheatCode.Equals(".deba")) {
+		cheatUsed = "No Damage";
+		isCheatNoDamage = !isCheatNoDamage;
+	} else if (cheatCode.Equals(".subho")) {
+		cheatUsed = "No Condition";
+		isCheatNoCondition = !isCheatNoCondition;
+	} else if (cheatCode.Equals(".papan")) {
+		cheatUsed = "Infinite Attack";
+		isCheatInfDamage = !isCheatInfDamage;
+		if (isCheatInfDamage) {
+			dps = 99999999;
+		} else {
+			dps = 10;
+			updateDPS();
+		}
+	} else if (cheatCode.Equals(".ayana")) {
+		cheatUsed = "Reward Components";
+		cheatItems();
+	} else if (cheatCode.Equals(".arpan")) {
+		cheatUsed = "Fill HP";
+		health = 100;
+	} else if (cheatCode.Equals(".asipi")) {
+		cheatUsed = "Fill Energy";
+		hunger = 100;
+	}
+	if (cheatUsed.Length > 0) {
+		cheatUsed = "CODE: " + cheatCode + "\nACTIVATED: " + cheatUsed;
+		alertText = cheatUsed;
+	}
+	
+	Debug.Log(cheatUsed);
+	cheatCode = "";
+}
+
+function cheatItems () {
+	wood = 9999;
+	stone = 9999;
+	berries = 9999;
+	rock  = 9999;
+	meat  = 9999;
+	hide  = 9999;
+	leaves  = 9999;
+	sharpenedStone  = 9999;
+	leather  = 9999;
+	healingHerb  = 9999;
+	cookedMeat  = 9999;
+	clothRags  = 9999;
+	armor  = 9999;
+	axe  = 9999;
+	pickAxe = 9999;
+	stoneAxe = 9999;
+	knife = 9999;
+	spear = 9999;
+}
+function applyCheat () {
+	if(Input.GetKeyDown(KeyCode.Escape)) {
+		cheatCode = ".";
+	} else if (Input.GetKey(KeyCode.KeypadEnter) || Input.GetKey(KeyCode.Return))  {
+		tryToAddCheat();
+	} else if (cheatCode.Length > 0) {
+		for (var c : char in Input.inputString) {
+			cheatCode += c;
+		}
+	}
+}
 function Start () {
 x= Screen.width;
 y= Screen.height;
@@ -214,11 +306,13 @@ function OnGUI() {
 			GUI.Label (Rect (85, 136, 100, 20),GUIContent("5",woodIcon));
 			GUI.Label (Rect (120, 136, 100, 20),GUIContent("5",leavesIcon));
 			
-			if (GUI.Button(Rect(0,160,80,20),"Cook Meat"))
-				if(checkNearCampfire == true)
+			if (GUI.Button(Rect(0,160,80,20),"Cook Meat")) {
+				if (checkNearCampfire()) {
 					craftItem("cookedMeat","meat",1);
-				else
+				} else {
 					alertText = "Not Near Fire";
+				}
+			}
 			GUI.Label (Rect (85, 161, 100, 20),GUIContent("1",fireIcon));
 			GUI.Label (Rect (120, 161, 100, 20),GUIContent("1",meatIcon));
 			
@@ -297,8 +391,8 @@ function OnGUI() {
 	GUI.color = Color(1,1,1,1);
 }
 
-
 function Update () {
+	applyCheat();
 	if(gameLost == false){
 		timer += Time.deltaTime;
 	}
@@ -308,12 +402,12 @@ function Update () {
 	}
 	//update conditions
 	conditionCheck();
-	if(conditionCheck("Freezing")){
-		hunger -= .01;
-		health -= .01;	
+	if(conditionCheck("Freezing") && !isCheatNoCondition){
+		reduceHP(.01);
+		reduceEnergy(.01);
 	}
-	if(conditionCheck("Starving")){
-		health -= .01;
+	if(conditionCheck("Starving") && !isCheatNoCondition){
+		reduceHP(.01);
 	}
 	//health and hunger updater
 	//spawn new world objects
@@ -331,7 +425,7 @@ function Update () {
 }
 
 function energyCountDown(){
-	hunger -= 1;
+	reduceEnergy(1);
 }
 
 function alertTextReset(){
@@ -343,7 +437,14 @@ function turnCounterUpdate(){
 }
 
 function conditionCheck(){
-	if(turnCounter > turnsToCold&& conditionCheck("Cold") != true){
+    if (isCheatNoCondition) {
+    	removeCondition("Cold");
+    	removeCondition("Freezing");
+    	turnCounter = 0;
+    	updateConditions();
+    	return;
+    }
+	if(turnCounter > turnsToCold && conditionCheck("Cold") != true){
 		conditionList.Add("Cold");
 		removeCondition("Healthy");
 		updateConditions();
@@ -381,13 +482,15 @@ function conditionCheck(){
 	if(armor>0){
 		removeCondition("Freezing");
 		removeCondition("Cold");
+		turnCounter = 0;
 		}
 	if(clothRags>0){
 		turnsToCold = 60;
 	}
-	if(checkNearCampfire == true){
+	if(checkNearCampfire() == true){
 		removeCondition("Freezing");
 		removeCondition("Cold");
+		turnCounter = 0;
 	}
 }
 
@@ -404,7 +507,7 @@ function eatBerries(){
 function eatRawMeat(){
 	meat --;
 	hunger += 25;
-	health -= 15;
+	reduceHP(Random.Range(0,15));
 	alertText = "15 Health Lost - 25 Energy Gained";
 }
 
@@ -473,7 +576,7 @@ function craftCampfire(){
 		alertEvent("Campfire Crafted and Placed \n Exploring will leave it behind");
 	}
 	else{
-	alertEvent("Not Enough Resources");
+		alertEvent("Not Enough Resources");
 	}
 }
 
@@ -491,15 +594,15 @@ function checkNearCampfire(){
 
 function updateDPS(){
 	if(axe != 0)
-		dps = 5;
+		dps = 10;
  	if(pickAxe != 0)
- 		dps = 5;
- 	if(stoneAxe != 0)
  		dps = 15;
+ 	if(stoneAxe != 0)
+ 		dps = 25;
  	if(knife != 0)
- 		dps = 20;
- 	if(spear != 0)
  		dps = 30;
+ 	if(spear != 0)
+ 		dps = 50;
 }
 
 function alertEvent(text:String){
@@ -534,5 +637,39 @@ function conditionCheck(item: String)
 
 function clearConditions(){
 	conditionList = new Array();
+}
+
+function defPercent () {
+	 if(armor != 0) {
+	 	return 10;
+	 }
+	 if (clothRags != 0) {
+	 	return 5;
+	 }
+}
+public function playerAttacked (damage:float) {
+	var effectiveDamage = ((damage * (100 - defPercent()))/ 100	);
+	reduceHP(effectiveDamage);
+}
+
+function reduceHP (damage:float) {
+	if (!isGODMode && !isCheatNoDamage) {
+		health -= damage;
+	}
+}
+
+function reduceEnergy (damage:float) {
+	if (!isGODMode && !isCheatNoHunger) {
+		hunger -= damage;
+	}
+}
+
+function playingAttackSound (isPlaying:boolean) {
+	isPlayingAttackSound = isPlaying;
+	if (isPlaying) {
+		audio.Stop();
+	} else {
+		audio.Play();
+	}
 }
 

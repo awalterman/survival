@@ -1,21 +1,20 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/GameStart.js">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/menuScreen.js">
     <Files>
-      <File FileName="Assets/Scripts/animal.js" Line="281" Column="1" />
-      <File FileName="Assets/Scripts/GameStart.js" Line="500" Column="1" />
-      <File FileName="Assets/Scripts/enemyGenerationScript.js" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/worldGeneration.js" Line="50" Column="1" />
+      <File FileName="Assets/Scripts/menuScreen.js" Line="9" Column="47" />
+      <File FileName="Assets/Scripts/GameStart.js" Line="161" Column="1" />
+      <File FileName="Assets/Scripts/animal.js" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Collectible.js" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Player.js" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/MapGen/EnemySpawnNode.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/weather.js" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/soundEffect.js" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/infoPopup.cs" Line="16" Column="17" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Assembly-UnityScript" expanded="True">
-            <Node name="Scripts" expanded="True">
-              <Node name="GameStart.js" selected="True" />
-            </Node>
-          </Node>
-        </State>
+        <State expanded="True" selected="True" />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

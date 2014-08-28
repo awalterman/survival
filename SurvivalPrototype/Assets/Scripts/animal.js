@@ -10,8 +10,8 @@ public var runSpeed : float = 2;
 public var attackPace : float = 100;
 public var viewAngle : float = 35;
 public var difficultyLevel : int = 1;
-public var maxChaseDistance : float = 30;
-public var maxRoamDistance : float = 5; // For not dangerous creatures, this is max flee radius
+public var maxChaseDistance : float = 30; // For not dangerous creatures, this is max flee radius
+public var maxRoamDistance : float = 5;
 public var animalFreeWaitTimeLoop : int = 50;
 public var animalFreeRoamTimeLoop : int = 500;
 public var animalRestTimeLoop : int = 500;
@@ -20,6 +20,8 @@ public var minMeatReward : int = 10;
 public var maxMeatReward : int = 50;
 public var minHideReward : int = 10;
 public var maxHideReward : int = 50;
+public var lazyAudio : AudioClip;
+
 
 public var idleAnimations : String[];
 public var attackAnimation : String[];
@@ -29,7 +31,8 @@ public var runAnimation : String[];
 public var hurtAnimation : String[];
 public var deathAnimation : String[];
 private var playerSource: GameStart;
-
+private var attackAudio : AudioClip;
+private var lastLazySoundTime : float = 0;
 
 var player : GameObject;
 var lastAttackTime : float;
@@ -43,6 +46,7 @@ private var fleeingLoop : int;
 private var restingLoop : int;
 private var isAnimalDead : boolean;
 private var currentAnimation : AnimationTypes;
+private var isColliding : boolean;
 
 enum AnimationTypes {
 	IDLE,
@@ -55,6 +59,7 @@ enum AnimationTypes {
 }
 
 function Start () {
+	resetAnimalToGroundLevel ();
 	initialPosition = transform.position;
 	player = GameObject.FindGameObjectWithTag("Player");
 	isAttacking = false;
@@ -63,9 +68,18 @@ function Start () {
 	runningLoop = animalFreeRoamTimeLoop;
 	restingLoop = 0;
 	isAnimalDead = false;
+	attackAudio = audio.clip;
+	isColliding = false;
+}
+
+function resetAnimalToGroundLevel () {
+	if ( transform.position.y < 0.5 || transform.position.y > 0.6) {
+		transform.position = Vector3(transform.position.x, 0.3, transform.position.z);	
+	}
 }
 
 function Update () {
+	resetAnimalToGroundLevel ();
 	if (isAnimalDead) {
 		return;
 	}
@@ -89,17 +103,15 @@ function Update () {
 			isAttacking = true;
 			tryToAttack();
 		} else {
-			if(restingLoop < animalRestTimeLoop) {
-				restingLoop++;
-				playAnimation(AnimationTypes.IDLE);
-			} else {
-				tryToFlee();
-			}
+			tryToFlee();
 		}
 	} else {
+		if (isAttacking) {
+			playAttackSound(false);
+		}
+		roamAroundLazy();
 		isAttacking = false;
 		isFleeing = false;
-		roamAroundLazy();
 	}
 }
 
@@ -108,7 +120,7 @@ function tryToFlee () {
 	if (fleeingLoop == 0) {
 		fleeingLoop = fleeTimeLoop;
 	}
-
+	playAttackSound(true);
 	if(Random.Range(0,9) > 7) {
 		transform.Rotate(0, runSpeed * 5 * Time.deltaTime, 0);
 	} else {
@@ -127,60 +139,98 @@ function tryToFlee () {
 	fleeingLoop--;
 	if (fleeingLoop <= 0 || !isInPlayerRange()) {
 		fleeingLoop = 0;
+		playAttackSound(false);
 		isFleeing = false;
 	}
-	restingLoop = animalRestTimeLoop * (fleeingLoop / fleeTimeLoop);
 }
 
 function tryToRotateIfGoingToHit () {
-	var hit : RaycastHit;
-	if (Physics.Raycast(transform.position + Vector3.up, transform.forward, hit)) {
-		if (Vector3.Distance(hit.collider.transform.position, transform.position) <= 20) {
-			transform.Rotate(0, Random.Range(10,90) * walkSpeed * Time.deltaTime, 0);
-		}
-	}
+//	var hit : RaycastHit;
+//	if (Physics.Raycast(transform.position + Vector3.up, transform.forward, hit)) {
+//		if (Vector3.Distance(hit.collider.transform.position, transform.position) <= 20) {
+//			transform.Rotate(0, Random.Range(10,90) * walkSpeed * Time.deltaTime, 0);
+//		}
+//	}
 }
 
 function rotateToInitialPoint () {
-  	var direction = (initialPosition - transform.position).normalized;
-	var	lookRotation = Quaternion.LookRotation(direction);
-	transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * walkSpeed * 5);
+	var rayDirection = initialPosition - transform.position;
+	var angle = Vector3.Angle(transform.forward, rayDirection);
+	if (Mathf.Abs(angle) > 10) {
+		transform.Rotate(0, angle * Time.deltaTime, 0);
+	}
+}
+
+function tryToGetAwayFromCollidingObject () {
+	var maxTurnRange : int;
+	if (isFleeing || isAttacking) {
+		maxTurnRange = 55;
+	} else {
+		maxTurnRange = 35;
+	}
+	var turnAngle = Random.Range(5,maxTurnRange) * runSpeed * Time.deltaTime;
+	transform.Rotate(0, turnAngle, 0);
+	transform.position = Vector3.MoveTowards(transform.position, (transform.position + transform.forward), walkSpeed * Time.deltaTime);
 }
 
 function OnCollisionEnter (col : Collision) {
-	rotateToInitialPoint();
+	isColliding = true;
+	tryToGetAwayFromCollidingObject();
 }
 
 function OnCollisionStay (col : Collision) {
-	rotateToInitialPoint();
+	isColliding = true;
+	tryToGetAwayFromCollidingObject();
+}
+
+function OnCollisionExit (col : Collision) {
+	isColliding = false;
+}
+
+function drawDebugLine () {
+	var distanceToMove = transform.forward * walkSpeed * Time.deltaTime;
+	var newPossiblePosition = Vector3.MoveTowards(transform.position, transform.position + distanceToMove, walkSpeed);
+	Debug.DrawLine(transform.position, initialPosition);
 }
 
 function roamAroundLazy () {
-	if (!isAnimalInsideBoundaryRadius(transform.position, maxRoamDistance)) {
-		rotateToInitialPoint();
+	if (isColliding) {
 		playAnimation(AnimationTypes.WALK);
-		transform.position = Vector3.MoveTowards(transform.position, initialPosition, walkSpeed * Time.deltaTime);
+		return;
+	}
+	playLazySound();
+	var distanceToMove : Vector3;
+	if (!isAnimalInsideBoundaryRadius(transform.position, maxRoamDistance)) {
+		drawDebugLine();
+		waitingLoop = 0;
+		rotateToInitialPoint();
+		distanceToMove = transform.forward * walkSpeed * Time.deltaTime;
+		playAnimation(AnimationTypes.WALK);
+		transform.position = Vector3.MoveTowards(transform.position, transform.position + distanceToMove, walkSpeed * Time.deltaTime);
 		return;
 	}
 	if (waitingLoop > 0) {
+		playAnimation(AnimationTypes.IDLE);
 		waitingLoop--;
 		return;
 	}
+
 	if (runningLoop > 0 || Random.Range(0,4) < 1) {
 		if (runningLoop > 0) {
 			runningLoop --;
 		} else {
 			runningLoop = animalFreeRoamTimeLoop;
 		}
+	
+		playAnimation(AnimationTypes.WALK);
 		if(Random.Range(0,9) > 6) {
-			transform.Rotate(0, walkSpeed*Time.deltaTime, 0);
+			transform.Rotate(0, Random.Range(0,5) * walkSpeed*Time.deltaTime, 0);
 		} else {
-			var distanceToMove = transform.forward * walkSpeed * Time.deltaTime;
+			distanceToMove = transform.forward * walkSpeed * Time.deltaTime;
 			var newPossiblePosition = Vector3.MoveTowards(transform.position, transform.position + distanceToMove, walkSpeed);
 			var xDistRoamed = Mathf.Abs(newPossiblePosition.x - initialPosition.x);
 			var zDistRoamed = Mathf.Abs(newPossiblePosition.z - initialPosition.z);
 			var dist = Mathf.Sqrt(Mathf.Pow(xDistRoamed,2)+Mathf.Pow(zDistRoamed,2));
-			playAnimation(AnimationTypes.WALK);
 			if (isAnimalInsideBoundaryRadius(newPossiblePosition, maxRoamDistance)) {
 				transform.position = newPossiblePosition;
 				tryToRotateIfGoingToHit();
@@ -237,16 +287,18 @@ function moveTowardsPlayer () {
 	playAnimation(AnimationTypes.RUN);
 	transform.LookAt(player.transform);
 	transform.position = Vector3.MoveTowards(transform.position, player.transform.position, runSpeed * Time.deltaTime);
+	playAttackSound (true);
 }
 
 function tryToAttack () {
 	if (canAttack()) {
+		playAttackSound (true);
 		if (!isFacingPlayer()) {
 			transform.LookAt(player.transform);
 		}
 		lastAttackTime = Time.time * 1000;
 		playAnimation(AnimationTypes.ATTACK);
-		playerSource.health -= damage;
+		playerSource.playerAttacked(damage);
 		
 		var players : GameObject[];
 		var player : GameObject;
@@ -301,7 +353,6 @@ function addBloodSplatter() {
 
 public function reduceHP (damage:float) {
 	hp -= damage;
-	Debug.Log(damage);
 	playAnimation(AnimationTypes.HURT);
 	if (hp <= 0) {
 		animalDidDie();
@@ -309,7 +360,7 @@ public function reduceHP (damage:float) {
 }
 
 function animalDidDie () {
-	Debug.Log("enemy died");
+	playAttackSound(false);
 	isAnimalDead = true;
 	giveRewardToPlayer();
 	playAnimation(AnimationTypes.DEAD);
@@ -324,7 +375,7 @@ function giveRewardToPlayer () {
 }
 
 function playAnimation(animationType:AnimationTypes) {
-	if (animation.isPlaying && currentAnimation >= animationType) {
+	if (animation.isPlaying && currentAnimation == animationType) {
 		return;
 	}
 	currentAnimation = animationType;
@@ -361,4 +412,24 @@ function playAnimationFromList (animations:String[]) {
 	var animationName = animations[index];
 	animation[animationName].wrapMode = WrapMode.Once;
 	animation.CrossFade(animationName);
+}
+
+function playLazySound() {
+	if (lazyAudio && !audio.isPlaying) {
+		if (Time.time - lastLazySoundTime >= 4 && isInPlayerRange()) {
+			audio.PlayOneShot(lazyAudio);
+			lastLazySoundTime = Time.time;
+		}
+	}	
+}
+
+function playAttackSound (shouldPlay:boolean) {
+	if (!shouldPlay && playerSource.isPlayingAttackSound) {
+		audio.Stop();
+		playerSource.playingAttackSound(false);
+	} else if(!playerSource.isPlayingAttackSound){
+		audio.clip = attackAudio;
+		playerSource.playingAttackSound(true);
+		audio.Play();
+	}
 }
