@@ -87,7 +87,7 @@ private function PermuteMap() {
 				newTile.name += " (" + i + ", " + j + ")";
 				newTile.transform.parent = transform;
 				newTile.transform.position = new Vector3(x * tileDim, 0, z * tileDim) + transform.position;
-				newTile.GetComponent.<MapTile>().SetDoors(0);
+				newTile.GetComponent.<OldMapTile>().SetDoors(0);
 			}
 			if (newTile) {
 				spawnedTiles.Add(newTile);
@@ -203,20 +203,20 @@ private function PermuteMap() {
 				d2 = Dir.North;
 			}
 			// Debug.DrawLine(fst.tile.transform.position, snd.tile.transform.position, Color.white, 1000, false);
-			fst.tile.GetComponent.<MapTile>().OpenDoors(d1);
-			snd.tile.GetComponent.<MapTile>().OpenDoors(d2);
+			fst.tile.GetComponent.<OldMapTile>().OpenDoors(d1);
+			snd.tile.GetComponent.<OldMapTile>().OpenDoors(d2);
 			openSet.Remove(fst);
 		}
 	}
 
 	// Clean up redundant walls
 	var wasLast : boolean = false;
-	var mt : MapTile;
+	var mt : OldMapTile;
 	for (j = 0; j < h; j++) {
 		wasLast = false;
 		for (i = 0; i < w; i++) {
 			if (tileMap[i, j]) {
-				mt = tileMap[i,j].tile.GetComponent.<MapTile>();
+				mt = tileMap[i,j].tile.GetComponent.<OldMapTile>();
 				if (wasLast) {
 					mt.OpenDoors(Dir.North);
 				}
@@ -231,7 +231,7 @@ private function PermuteMap() {
 		wasLast = false;
 		for (j = 0; j < h; j++) {
 			if (tileMap[i, j]) {
-				mt = tileMap[i,j].tile.GetComponent.<MapTile>();
+				mt = tileMap[i,j].tile.GetComponent.<OldMapTile>();
 				if (wasLast) {
 					mt.OpenDoors(Dir.West);
 				}
