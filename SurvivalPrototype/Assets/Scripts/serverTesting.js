@@ -1,39 +1,41 @@
 ﻿#pragma strict
 
-public var title: Texture2D;
-public var start: Texture2D;
-public var info : Texture2D;
+import 	SimpleJSON;
 var url = "http://localhost:8080/survive/leaderboard";
 var www: WWW;
-var leaderboard = "Name\n";
-var scores = "Score \n";
-
-function OnGUI(){
-GUI.Label(Rect(500,-150,512,512),title);
-GUI.Label (Rect (25, Screen.height/4, 418, 445), info);
-GUI.Label(Rect(500,200, 1000,1000),""+ leaderboard);
-GUI.Label(Rect(600,200, 1000,1000),""+ scores);
-if(GUI.Button(Rect(700,500,50,50),start)){
-	Application.LoadLevel("PlayerInTestMap");	
-}
-}
+var leaderboard;
 
 function Start () {
-leaderboard = "Name\n";
-scores = "Score \n";
+
 www = new WWW (url);
+
+// wait for request to complete
 yield www;
  
 // and check for errors
 if (www.error == null)
 	{
-	leaderboard += formatLeaderboards(parseString(www.data));
+	  var scores = www.data;
+		//success
+		Debug.Log("WWW Ok!: " + scores);	
 	} 
 
 else {
     // something wrong!
     Debug.Log("WWW Error: "+ www.error);
 	}
+
+leaderboard = formatLeaderboards(parseString(www.data));
+
+}
+
+function postScore(name: String, score: String){
+	var temp = name + "-" + score;
+	var form = new WWWForm();
+	form.AddField( "score", temp);
+	// Create a download object
+	var download = new WWW( url, form );
+	yield download;
 }
 
 function parseString( data: String){
@@ -57,6 +59,7 @@ function parseString( data: String){
 			result.RemoveAt(j);
 		}
 	}
+	Debug.Log(result);
 	return result;
 }
 
@@ -64,11 +67,15 @@ function formatLeaderboards(data: Array){
 	var results: String;
 	for(var i = 1; i<data.length;i++){
 		if(i%2 == 1){
-			results+= data[i] + " \n";
+			results+= data[i] + " ";
 		}
 		else{
-			scores+= "" + data[i] + "\n";
+			results+= " Score: " + data[i] + "\n";
 		}
 	}
 	return results;
+}
+
+function OnGUI(){
+	GUI.Label(Rect(50,50,1000,1000), "" + leaderboard);
 }
