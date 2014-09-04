@@ -1,9 +1,11 @@
 ﻿#pragma strict
 var text: Texture2D;
 var stringToEdit : String = "Edit Me";
-var url = "http://localhost:8080/survive/leaderboard";
+var url;
 
-
+function Start(){
+url = "http://coastal-sanctum-691.appspot.com/survive/leaderboard";
+}
 function OnGUI() {
 	GUI.Label(Rect(0,-50,500,500), text);
 	GUI.Label(Rect(600,180,100,50),"Time Survived: "+PlayerPrefs.GetInt("TimeLived"));

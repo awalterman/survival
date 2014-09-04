@@ -3,7 +3,7 @@
 public var title: Texture2D;
 public var start: Texture2D;
 public var info : Texture2D;
-var url = "http://localhost:8080/survive/leaderboard";
+var url;
 var www: WWW;
 var leaderboard = "Name\n";
 var scores = "Score \n";
@@ -19,6 +19,7 @@ if(GUI.Button(Rect(700,500,50,50),start)){
 }
 
 function Start () {
+url = "http://coastal-sanctum-691.appspot.com/survive/leaderboard";
 leaderboard = "Name\n";
 scores = "Score \n";
 www = new WWW (url);
